@@ -1,0 +1,12 @@
+{
+  "name": "Teacher Angel Viana — Student Portal",
+  "short_name": "Teacher Angel",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8E7",
+  "theme_color": "#930500",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
