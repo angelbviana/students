@@ -12,7 +12,7 @@ async function fetchAppState() {
   return rows?.[0]?.data || null;
 }
 
-const TEACHER = { name: "Angel Viana", whatsapp: "5548999999999" };
+const TEACHER = { name: "Angel Viana", whatsapp: "5548996968856" };
 
 const STUDENTS = {
   "angelica-viana": {
@@ -148,6 +148,67 @@ const LEVELS = ["A1","A2","B1","B2","C1","C2"];
 const LLABEL = {A1:"Beginner",A2:"Elementary",B1:"Intermediate",B2:"Upper-Int.",C1:"Advanced",C2:"Proficiency"};
 const SCOL = {Speaking:"#16a34a",Listening:"#2563eb",Grammar:"#7c3aed",Vocabulary:"#ea580c"};
 const catN = {tools:"Dicionário & Ferramentas",practice:"Prática & Jogos",music:"Música",listen:"Podcasts & Listening"};
+
+// ── SCHEDULING LINK ──
+const BOOKING_LINK = "https://calendar.app.google/JZyuDGo68ZofNq337";
+
+// ── MOTIVATIONAL MESSAGES (rotate randomly) ──
+const MESSAGES = [
+  "Cada aula é um passo a mais rumo à fluência. Você está indo muito bem! ♡",
+  "Consistency is key! Que orgulho ver você aqui de novo. Keep going! 🌟",
+  "Aprender inglês é uma jornada, não uma corrida. E você está no caminho certo! 💛",
+  "Your English is getting better every single day. Acredite em você! ✨",
+  "Que semana incrível de aprendizado! Continue assim, você está arrasando! 🎉",
+  "Small steps every day lead to big results. Orgulho de você! ♡",
+  "You've got this! Cada palavrinha nova é uma vitória. Celebre! 🏆",
+  "Lembre-se: errar faz parte do processo. O importante é não parar! 💪",
+  "Your dedication inspires me! Continue aparecendo e evoluindo. 🌸",
+  "Inglês abre portas que você nem imagina. E você está abrindo todas elas! 🚪✨",
+  "Que bom ter você aqui! Cada aula conta. Vamos juntas nessa! 💕",
+  "Progress, not perfection! Você está evoluindo de um jeito lindo. 🦋",
+  "I'm so proud of you! Sua dedicação me inspira todos os dias. ♡",
+  "Keep showing up! O inglês que você sempre sonhou está mais perto do que parece. 🌈",
+  "You are braver than you believe! Fale, erre, aprenda e repita. 💫",
+  "Cada aula assistida é um tijolinho no seu castelo do inglês! 🏰",
+  "Não existe atalho, mas existe consistência. E você tem de sobra! 💛",
+  "Your journey is unique and beautiful. Keep going! ✨",
+  "Que semana produtiva! Você está construindo algo incrível. 🌟",
+  "I believe in you more than you know! Continue brilhando! ⭐",
+];
+
+// ── VOCABULARY BY LEVEL ──
+const VOCAB = {
+  A1: [
+    {en:"hello",pt:"olá",audio:"hello"},{en:"goodbye",pt:"tchau",audio:"goodbye"},{en:"please",pt:"por favor",audio:"please"},{en:"thank you",pt:"obrigada",audio:"thank+you"},{en:"yes",pt:"sim",audio:"yes"},{en:"no",pt:"não",audio:"no"},{en:"sorry",pt:"desculpe",audio:"sorry"},{en:"help",pt:"ajuda",audio:"help"},{en:"water",pt:"água",audio:"water"},{en:"food",pt:"comida",audio:"food"},
+    {en:"house",pt:"casa",audio:"house"},{en:"school",pt:"escola",audio:"school"},{en:"work",pt:"trabalho",audio:"work"},{en:"family",pt:"família",audio:"family"},{en:"friend",pt:"amigo",audio:"friend"},{en:"day",pt:"dia",audio:"day"},{en:"time",pt:"tempo/hora",audio:"time"},{en:"year",pt:"ano",audio:"year"},{en:"man",pt:"homem",audio:"man"},{en:"woman",pt:"mulher",audio:"woman"},
+    {en:"child",pt:"criança",audio:"child"},{en:"book",pt:"livro",audio:"book"},{en:"car",pt:"carro",audio:"car"},{en:"money",pt:"dinheiro",audio:"money"},{en:"city",pt:"cidade",audio:"city"},{en:"country",pt:"país",audio:"country"},{en:"name",pt:"nome",audio:"name"},{en:"number",pt:"número",audio:"number"},{en:"color",pt:"cor",audio:"color"},{en:"happy",pt:"feliz",audio:"happy"},
+  ],
+  A2: [
+    {en:"travel",pt:"viajar",audio:"travel"},{en:"weather",pt:"tempo/clima",audio:"weather"},{en:"health",pt:"saúde",audio:"health"},{en:"hobby",pt:"hobby",audio:"hobby"},{en:"restaurant",pt:"restaurante",audio:"restaurant"},{en:"shopping",pt:"compras",audio:"shopping"},{en:"sport",pt:"esporte",audio:"sport"},{en:"music",pt:"música",audio:"music"},{en:"movie",pt:"filme",audio:"movie"},{en:"weekend",pt:"fim de semana",audio:"weekend"},
+    {en:"holiday",pt:"feriado/férias",audio:"holiday"},{en:"office",pt:"escritório",audio:"office"},{en:"meeting",pt:"reunião",audio:"meeting"},{en:"neighbour",pt:"vizinho",audio:"neighbour"},{en:"journey",pt:"jornada/viagem",audio:"journey"},{en:"language",pt:"idioma",audio:"language"},{en:"culture",pt:"cultura",audio:"culture"},{en:"market",pt:"mercado",audio:"market"},{en:"describe",pt:"descrever",audio:"describe"},{en:"suggest",pt:"sugerir",audio:"suggest"},
+    {en:"prefer",pt:"preferir",audio:"prefer"},{en:"explain",pt:"explicar",audio:"explain"},{en:"improve",pt:"melhorar",audio:"improve"},{en:"practise",pt:"praticar",audio:"practise"},{en:"remember",pt:"lembrar",audio:"remember"},{en:"forget",pt:"esquecer",audio:"forget"},{en:"believe",pt:"acreditar",audio:"believe"},{en:"agree",pt:"concordar",audio:"agree"},{en:"imagine",pt:"imaginar",audio:"imagine"},{en:"appear",pt:"aparecer",audio:"appear"},
+  ],
+  B1: [
+    {en:"achieve",pt:"alcançar/conquistar",audio:"achieve"},{en:"challenge",pt:"desafio",audio:"challenge"},{en:"confident",pt:"confiante",audio:"confident"},{en:"consequence",pt:"consequência",audio:"consequence"},{en:"contribute",pt:"contribuir",audio:"contribute"},{en:"despite",pt:"apesar de",audio:"despite"},{en:"environment",pt:"meio ambiente",audio:"environment"},{en:"experience",pt:"experiência",audio:"experience"},{en:"improve",pt:"melhorar",audio:"improve"},{en:"influence",pt:"influência",audio:"influence"},
+    {en:"mention",pt:"mencionar",audio:"mention"},{en:"opportunity",pt:"oportunidade",audio:"opportunity"},{en:"opinion",pt:"opinião",audio:"opinion"},{en:"probably",pt:"provavelmente",audio:"probably"},{en:"purpose",pt:"propósito",audio:"purpose"},{en:"realize",pt:"perceber/realizar",audio:"realize"},{en:"recently",pt:"recentemente",audio:"recently"},{en:"relationship",pt:"relacionamento",audio:"relationship"},{en:"responsibility",pt:"responsabilidade",audio:"responsibility"},{en:"situation",pt:"situação",audio:"situation"},
+    {en:"solve",pt:"resolver",audio:"solve"},{en:"support",pt:"apoiar/suporte",audio:"support"},{en:"surprisingly",pt:"surpreendentemente",audio:"surprisingly"},{en:"though",pt:"embora/porém",audio:"though"},{en:"throughout",pt:"ao longo de",audio:"throughout"},{en:"trend",pt:"tendência",audio:"trend"},{en:"unless",pt:"a menos que",audio:"unless"},{en:"whereas",pt:"enquanto/ao passo que",audio:"whereas"},{en:"worthwhile",pt:"que vale a pena",audio:"worthwhile"},{en:"outcome",pt:"resultado/desfecho",audio:"outcome"},
+  ],
+  B2: [
+    {en:"acknowledge",pt:"reconhecer",audio:"acknowledge"},{en:"assumption",pt:"suposição",audio:"assumption"},{en:"comprehensive",pt:"abrangente",audio:"comprehensive"},{en:"controversial",pt:"controverso",audio:"controversial"},{en:"crucial",pt:"crucial",audio:"crucial"},{en:"dedicate",pt:"dedicar",audio:"dedicate"},{en:"distinguish",pt:"distinguir",audio:"distinguish"},{en:"emphasize",pt:"enfatizar",audio:"emphasize"},{en:"establish",pt:"estabelecer",audio:"establish"},{en:"evaluate",pt:"avaliar",audio:"evaluate"},
+    {en:"furthermore",pt:"além disso",audio:"furthermore"},{en:"generate",pt:"gerar",audio:"generate"},{en:"highlight",pt:"destacar",audio:"highlight"},{en:"implement",pt:"implementar",audio:"implement"},{en:"indicate",pt:"indicar",audio:"indicate"},{en:"inevitable",pt:"inevitável",audio:"inevitable"},{en:"negotiate",pt:"negociar",audio:"negotiate"},{en:"nevertheless",pt:"no entanto",audio:"nevertheless"},{en:"obtain",pt:"obter",audio:"obtain"},{en:"perspective",pt:"perspectiva",audio:"perspective"},
+    {en:"phenomenon",pt:"fenômeno",audio:"phenomenon"},{en:"prioritize",pt:"priorizar",audio:"prioritize"},{en:"profound",pt:"profundo",audio:"profound"},{en:"reinforce",pt:"reforçar",audio:"reinforce"},{en:"significant",pt:"significativo",audio:"significant"},{en:"straightforward",pt:"direto/simples",audio:"straightforward"},{en:"subsequent",pt:"subsequente",audio:"subsequent"},{en:"sustain",pt:"sustentar",audio:"sustain"},{en:"thorough",pt:"minucioso",audio:"thorough"},{en:"underlying",pt:"subjacente",audio:"underlying"},
+  ],
+  C1: [
+    {en:"articulate",pt:"articular/eloquente",audio:"articulate"},{en:"candid",pt:"franco/sincero",audio:"candid"},{en:"circumvent",pt:"contornar/evitar",audio:"circumvent"},{en:"compelling",pt:"convincente/irresistível",audio:"compelling"},{en:"concise",pt:"conciso",audio:"concise"},{en:"convey",pt:"transmitir/expressar",audio:"convey"},{en:"deduce",pt:"deduzir",audio:"deduce"},{en:"discern",pt:"discernir",audio:"discern"},{en:"eloquent",pt:"eloquente",audio:"eloquent"},{en:"facilitate",pt:"facilitar",audio:"facilitate"},
+    {en:"implication",pt:"implicação",audio:"implication"},{en:"inherent",pt:"inerente",audio:"inherent"},{en:"insight",pt:"percepção/visão",audio:"insight"},{en:"intricate",pt:"intrincado/complexo",audio:"intricate"},{en:"meticulous",pt:"meticuloso",audio:"meticulous"},{en:"nuance",pt:"nuance/detalhe",audio:"nuance"},{en:"paradox",pt:"paradoxo",audio:"paradox"},{en:"perception",pt:"percepção",audio:"perception"},{en:"plausible",pt:"plausível",audio:"plausible"},{en:"pragmatic",pt:"pragmático",audio:"pragmatic"},
+    {en:"prevalent",pt:"predominante",audio:"prevalent"},{en:"scrutinize",pt:"examinar minuciosamente",audio:"scrutinize"},{en:"subtle",pt:"sutil",audio:"subtle"},{en:"tangible",pt:"tangível/concreto",audio:"tangible"},{en:"tenacious",pt:"tenaz/persistente",audio:"tenacious"},{en:"transparent",pt:"transparente",audio:"transparent"},{en:"unambiguous",pt:"inequívoco/claro",audio:"unambiguous"},{en:"validate",pt:"validar",audio:"validate"},{en:"versatile",pt:"versátil",audio:"versatile"},{en:"withstand",pt:"resistir/suportar",audio:"withstand"},
+  ],
+  C2: [
+    {en:"aberrant",pt:"aberrante/anormal",audio:"aberrant"},{en:"acrimony",pt:"acrimônia/amargura",audio:"acrimony"},{en:"ameliorate",pt:"melhorar/amenizar",audio:"ameliorate"},{en:"apposite",pt:"apropriado/pertinente",audio:"apposite"},{en:"assiduous",pt:"assíduo/diligente",audio:"assiduous"},{en:"byzantine",pt:"bizantino/muito complexo",audio:"byzantine"},{en:"cogent",pt:"convincente/coerente",audio:"cogent"},{en:"commensurate",pt:"proporcional/equivalente",audio:"commensurate"},{en:"confound",pt:"confundir/desconcertar",audio:"confound"},{en:"convoluted",pt:"intrincado/confuso",audio:"convoluted"},
+    {en:"disingenuous",pt:"desonesto/hipócrita",audio:"disingenuous"},{en:"equivocate",pt:"ser evasivo/equivocar",audio:"equivocate"},{en:"esoteric",pt:"esotérico/obscuro",audio:"esoteric"},{en:"euphemism",pt:"eufemismo",audio:"euphemism"},{en:"fastidious",pt:"meticuloso/exigente",audio:"fastidious"},{en:"idiosyncrasy",pt:"idiossincrasia/peculiaridade",audio:"idiosyncrasy"},{en:"imperceptible",pt:"imperceptível",audio:"imperceptible"},{en:"incongruent",pt:"incongruente",audio:"incongruent"},{en:"inveterate",pt:"inveterado/habitual",audio:"inveterate"},{en:"juxtapose",pt:"justapor",audio:"juxtapose"},
+    {en:"labyrinthine",pt:"labiríntico/complexo",audio:"labyrinthine"},{en:"magnanimous",pt:"magnânimo/generoso",audio:"magnanimous"},{en:"nefarious",pt:"nefasto/perverso",audio:"nefarious"},{en:"obfuscate",pt:"obscurecer/confundir",audio:"obfuscate"},{en:"ostensibly",pt:"ostensivamente/aparentemente",audio:"ostensibly"},{en:"perfidious",pt:"pérfido/traiçoeiro",audio:"perfidious"},{en:"perspicacious",pt:"perspicaz/sagaz",audio:"perspicacious"},{en:"propitious",pt:"propício/favorável",audio:"propitious"},{en:"recalcitrant",pt:"recalcitrante/teimoso",audio:"recalcitrant"},{en:"sycophant",pt:"bajulador/adulador",audio:"sycophant"},
+  ],
+};
 
 const CL = "#FFF8E7";
 const SG = "#930500";
@@ -372,8 +433,11 @@ export default function App() {
   const [done, setDone] = useState({});
   const [taskDone, setTaskDone] = useState({});
   const [navOpen, setNavOpen] = useState(false);
-  const [sbHomework, setSbHomework] = useState([]); // deveres do supabase
-  const [sbLessons, setSbLessons] = useState([]); // videoaulas do supabase
+  const [sbHomework, setSbHomework] = useState([]);
+  const [sbLessons, setSbLessons] = useState([]);
+  const [dailyMsg] = useState(()=>MESSAGES[Math.floor(Math.random()*MESSAGES.length)]);
+  const [vocabFlip, setVocabFlip] = useState({});
+  const [vocabSearch, setVocabSearch] = useState("");
 
   // busca deveres do Supabase ao fazer login
   useEffect(() => {
@@ -620,6 +684,35 @@ export default function App() {
             <div style={{position:"relative",zIndex:1,fontSize:40}}>🇬🇧</div>
           </div>
 
+          {/* MENSAGEM DA TEACHER */}
+          <div style={{
+            padding:"14px 18px",borderRadius:14,marginBottom:14,
+            background:isL?`linear-gradient(135deg,${CF}20,${CF}08)`:"rgba(149,187,234,0.08)",
+            border:`1.5px solid ${isL?CF+"60":CF+"30"}`,
+            display:"flex",gap:12,alignItems:"flex-start",
+          }}>
+            <span style={{fontSize:22,flexShrink:0}}>💌</span>
+            <div>
+              <div style={{fontSize:11,fontWeight:700,color:isL?"#1E3A8A":CF,marginBottom:3,textTransform:"uppercase",letterSpacing:0.8}}>Mensagem da Teacher Angel</div>
+              <div style={{fontSize:13,color:T.t1,lineHeight:1.6,fontStyle:"italic"}}>{dailyMsg}</div>
+            </div>
+          </div>
+
+          {/* BOTÃO DE AGENDAMENTO */}
+          <a href={BOOKING_LINK} target="_blank" rel="noopener noreferrer" style={{
+            display:"flex",alignItems:"center",justifyContent:"center",gap:10,
+            padding:"14px",borderRadius:14,marginBottom:20,textDecoration:"none",
+            background:`linear-gradient(135deg,${SG},#B91C1C)`,
+            boxShadow:`0 4px 18px ${SG}40`,cursor:"pointer",
+          }}>
+            <span style={{fontSize:20}}>📅</span>
+            <div style={{textAlign:"center"}}>
+              <div style={{fontSize:14,fontWeight:700,color:"#fff",letterSpacing:0.3}}>Agendar minha próxima aula</div>
+              <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",marginTop:1}}>Clique para ver os horários disponíveis</div>
+            </div>
+            <span style={{fontSize:16,color:"rgba(255,255,255,0.8)"}}>→</span>
+          </a>
+
           {/* STATS */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:28}}>
             {[
@@ -808,27 +901,40 @@ export default function App() {
             {/* VOCABULÁRIO */}
             {tab==="words"&&(
               <div>
-                <input className="av-input" type="text" placeholder="🔍 Buscar palavra..." value={search} onChange={e=>setSearch(e.target.value)}
+                <input className="av-input" type="text" placeholder="🔍 Buscar palavra..." value={vocabSearch} onChange={e=>setVocabSearch(e.target.value)}
                   style={{width:"100%",padding:"11px 16px",borderRadius:10,border:`2px solid ${isL?CF+"50":T.line}`,background:T.inp,color:T.t1,fontSize:13,fontFamily:Fb,fontWeight:500,marginBottom:14}} />
-                {words.length===0
-                  ?<p style={{textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>{search?"Sem resultados.":"Nenhuma palavra."}</p>
-                  :<div style={{borderRadius:14,overflow:"hidden",border:`1.5px solid ${isL?CF+"40":T.line}`,boxShadow:T.sh}}>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 2fr",padding:"10px 16px",background:isL?CF+"18":T.alt,borderBottom:`1px solid ${isL?CF+"30":T.line}`,fontSize:9,color:T.t3,textTransform:"uppercase",letterSpacing:1.5,fontWeight:700}}>
-                      <span>English</span><span>Português</span><span>Example</span>
-                    </div>
-                    {words.map((w,i)=>(
-                      <div key={i} className="row-hov" style={{
-                        display:"grid",gridTemplateColumns:"1fr 1fr 2fr",
-                        padding:"10px 16px",borderBottom:i<words.length-1?`1px solid ${isL?CF+"20":T.line}`:"none",
-                        background:T.card,
+                <div style={{fontSize:11,color:T.t3,marginBottom:12,fontWeight:600,textAlign:"center"}}>
+                  {(VOCAB[level]||[]).length} palavras essenciais do nível {level} · Clique para ver a tradução · 🔊 para ouvir
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:10}}>
+                  {(VOCAB[level]||[]).filter(w=>!vocabSearch||w.en.toLowerCase().includes(vocabSearch.toLowerCase())||w.pt.toLowerCase().includes(vocabSearch.toLowerCase())).map((w,i)=>{
+                    const fid=`${level}-${i}`;const flipped=vocabFlip[fid];
+                    return(
+                      <div key={i} onClick={()=>setVocabFlip(p=>({...p,[fid]:!p[fid]}))} style={{
+                        padding:"16px 12px",borderRadius:12,cursor:"pointer",textAlign:"center",
+                        background:flipped?(isL?`linear-gradient(135deg,${SG}12,${CF}08)`:T.alt):T.card,
+                        border:`1.5px solid ${flipped?(isL?SG+"50":T.sg):isL?CF+"40":T.line}`,
+                        boxShadow:T.sh,transition:"all 0.2s",minHeight:80,
+                        display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:4,
                       }}>
-                        <span style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd}}>{w.en}</span>
-                        <span style={{fontSize:12,color:T.t2,fontWeight:500}}>{w.pt}</span>
-                        <span style={{fontSize:11,color:T.t3,fontStyle:"italic"}}>{w.ex}</span>
+                        {flipped?(
+                          <>
+                            <div style={{fontSize:13,fontWeight:700,color:SG}}>{w.pt}</div>
+                            <div style={{fontSize:10,color:T.t3,fontWeight:500}}>{w.en}</div>
+                            <a href={`https://dictionary.cambridge.org/dictionary/english/${w.audio}`} target="_blank" rel="noopener noreferrer"
+                              onClick={e=>e.stopPropagation()}
+                              style={{fontSize:10,color:CF,fontWeight:700,textDecoration:"none",marginTop:2}}>🔊 ouvir</a>
+                          </>
+                        ):(
+                          <>
+                            <div style={{fontSize:15,fontWeight:700,color:T.t1,fontFamily:Fd}}>{w.en}</div>
+                            <div style={{fontSize:9,color:T.t3,fontWeight:500}}>toque para traduzir</div>
+                          </>
+                        )}
                       </div>
-                    ))}
-                  </div>
-                }
+                    );
+                  })}
+                </div>
               </div>
             )}
 
