@@ -1,4 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+// ── SUPABASE CONFIG ──
+const SUPABASE_URL = "https://njqltdokhdychsnbvwlc.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qcWx0ZG9raGR5Y2hzbmJ2d2xjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3MjI2NzcsImV4cCI6MjA5OTI5ODY3N30.rxbBoSs55B41UD5peV9nfk84NseekLA8fWeUcjO8-8M";
+
+async function fetchAppState() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/app_state?select=data&limit=1`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  const rows = await res.json();
+  return rows?.[0]?.data || null;
+}
 
 const TEACHER = { name: "Angel Viana", whatsapp: "5548999999999" };
 
@@ -351,6 +363,22 @@ export default function App() {
   const [done, setDone] = useState({});
   const [taskDone, setTaskDone] = useState({});
   const [navOpen, setNavOpen] = useState(false);
+  const [sbHomework, setSbHomework] = useState([]); // deveres do supabase
+
+  // busca deveres do Supabase ao fazer login
+  useEffect(() => {
+    if (!loggedIn || !student) return;
+    fetchAppState().then(data => {
+      if (!data) return;
+      // deveres ficam em data.homework ou data.deveres
+      const hw = data.homework || data.deveres || data.tasks || [];
+      // filtra só os deveres deste aluno pelo email
+      const mine = Array.isArray(hw)
+        ? hw.filter(h => h.studentEmail?.toLowerCase() === student.email?.toLowerCase() || h.student_email?.toLowerCase() === student.email?.toLowerCase())
+        : [];
+      setSbHomework(mine);
+    }).catch(() => {});
+  }, [loggedIn, student]);
 
   const T = mode==="light"?LIGHT:DARK;
   const isL = mode==="light";
@@ -642,7 +670,43 @@ export default function App() {
             {/* TAREFAS */}
             {tab==="tasks"&&(
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                {(s.tasks[level]||[]).length===0
+                {/* Deveres do Supabase (central de operações) */}
+                {sbHomework.length>0&&(
+                  <div style={{marginBottom:8}}>
+                    <p style={{fontSize:11,fontWeight:700,color:SG,textTransform:"uppercase",letterSpacing:1.2,margin:"0 0 8px",padding:"0 4px"}}>✏️ Deveres da Teacher</p>
+                    {sbHomework.map((t,i)=>{
+                      const id=`sb-${i}`;const isDone=taskDone[id]??t.done??t.status==="concluido";
+                      const material = t.materialUrl || t.material_url || t.fileUrl || t.file_url || null;
+                      return(
+                        <div key={id} className="hov" style={{
+                          padding:"16px 18px",borderRadius:14,background:T.card,
+                          border:`1.5px solid ${isL?CF+"40":T.line}`,opacity:isDone?0.6:1,boxShadow:T.sh,marginBottom:8,
+                        }}>
+                          <div style={{display:"flex",gap:12}}>
+                            <button onClick={()=>setTaskDone(p=>({...p,[id]:!isDone}))} style={{
+                              width:26,height:26,borderRadius:8,flexShrink:0,cursor:"pointer",marginTop:1,
+                              border:`2px solid ${isDone?"#16a34a":isL?CF:T.lh}`,
+                              background:isDone?"#16a34a18":"transparent",
+                              color:isDone?"#16a34a":"transparent",fontSize:13,
+                              display:"flex",alignItems:"center",justifyContent:"center",
+                            }}>✓</button>
+                            <div style={{flex:1}}>
+                              <div style={{fontSize:14,fontWeight:600,color:T.t1,marginBottom:4,textDecoration:isDone?"line-through":"none"}}>{t.title||t.description||t.descricao}</div>
+                              {(t.details||t.message||t.mensagem)&&<div style={{fontSize:12,color:T.t2,lineHeight:1.5,marginBottom:6,fontWeight:500}}>{t.details||t.message||t.mensagem}</div>}
+                              <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+                                <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:isDone?"#16a34a15":SG+"12",color:isDone?"#16a34a":SG}}>{isDone?"Concluída ✓":`Prazo: ${t.due||t.prazo||t.dueDate||"—"}`}</span>
+                                {material&&<a href={material} target="_blank" rel="noopener noreferrer" style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:"#3b82f615",color:"#3b82f6",textDecoration:"none"}}>📎 Material</a>}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Deveres estáticos do código */}
+                {(s.tasks[level]||[]).length===0&&sbHomework.length===0
                   ?<p style={{textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhuma tarefa neste nível ♡</p>
                   :(s.tasks[level]||[]).map((t,i)=>{
                     const id=`t-${level}-${i}`;const isDone=taskDone[id]??t.done;
