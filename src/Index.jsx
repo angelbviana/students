@@ -373,6 +373,7 @@ export default function App() {
   const [taskDone, setTaskDone] = useState({});
   const [navOpen, setNavOpen] = useState(false);
   const [sbHomework, setSbHomework] = useState([]); // deveres do supabase
+  const [sbLessons, setSbLessons] = useState([]); // videoaulas do supabase
 
   // busca deveres do Supabase ao fazer login
   useEffect(() => {
@@ -424,6 +425,9 @@ export default function App() {
       const allHw = appData.homework||[];
       const myHw = allHw.filter(h=>h.studentId===found.id);
       setSbHomework(myHw);
+      const allLessons = appData.lessons||[];
+      const myLessons = allLessons.filter(l=>l.studentId===found.id);
+      setSbLessons(myLessons);
       setStudent(st);setLevel(lvl);setLoggedIn(true);
     } catch(e){setErr("Erro de conexão. Tente novamente.");}
     setLoading(false);
@@ -661,7 +665,7 @@ export default function App() {
                   </div>
                 )}
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-                  {(s.lessons[level]||[]).map((l,i)=>{
+                  {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:"",skills:[],dur:""})), ...(s.lessons[level]||[])].map((l,i)=>{
                     const id=`${level}-${i}`;const soon=!l.url;
                     return(
                       <div key={i} className="hov" onClick={()=>!soon&&setVideo(l.url)} style={{
