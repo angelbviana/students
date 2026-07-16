@@ -251,7 +251,11 @@ function Heart({size=16,color=SG,opacity=1}){
   return <svg width={size} height={size} viewBox="0 0 24 24" fill={color} opacity={opacity} style={{flexShrink:0}}><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>;
 }
 
-// ── SONG ACTIVITIES (no lyrics reproduced — video + vocab + comprehension quiz) ──
+// ── SONG-BASED LEARNING EXPERIENCE ──
+// Note: song lyrics are never reproduced. Expressions/vocabulary are taught as
+// general English content (idioms, grammar, pronunciation) that happen to be
+// rich in this particular song — students recognize them naturally when they
+// read the full lyrics via the external Genius link.
 const SONGS = [
   {
     id: "wonderwall",
@@ -259,26 +263,74 @@ const SONGS = [
     artist: "Oasis",
     youtubeId: "6hzrDeceEKc",
     lyricsLink: "https://genius.com/Oasis-wonderwall-lyrics",
-    level: "A2-B1",
-    about: "Uma das músicas mais icônicas do rock britânico dos anos 90. Ótima para praticar vocabulário sobre sentimentos e relacionamentos.",
+    level: "A2–B1",
+    intro: "Oasis foi uma das bandas mais importantes do Britpop, movimento musical britânico dos anos 90. \"Wonderwall\" (1995) é uma das canções mais reconhecidas do rock britânico e uma ótima porta de entrada pro inglês do dia a dia — cheia de expressões que os nativos realmente usam.",
+    concept: "\"Wonderwall\" não é uma palavra comum do dicionário — foi criada pela banda. De forma geral, o termo passou a representar algo (ou alguém) que te salva, te inspira ou te dá esperança numa fase difícil. Noel Gallagher, o compositor, já disse em entrevistas que o significado é intencionalmente aberto — cada ouvinte interpreta à sua maneira. Por isso, quando você ouvir a música, vale refletir: o que seria o seu \"wonderwall\"?",
+    expressions: [
+      {phrase:"fire in your heart", meaning:"paixão, entusiasmo ou motivação por algo", example:"After years without a hobby, painting brought the fire back in her heart."},
+      {phrase:"word on the street", meaning:"um boato, algo que as pessoas andam comentando (não é literal!)", example:"Word on the street is that the company is hiring again."},
+      {phrase:"save someone", meaning:"ajudar alguém a sair de uma situação difícil (literal ou emocionalmente)", example:"That phone call really saved me — I needed to talk to someone."},
+      {phrase:"throw something away", meaning:"desperdiçar ou jogar fora uma oportunidade/chance", example:"Don't throw away everything you've built just because of one bad day."},
+      {phrase:"by now", meaning:"a essa altura, já (indicando que algo já deveria ter acontecido)", example:"You should know by now that I always answer texts quickly."},
+      {phrase:"gonna (going to)", meaning:"forma falada/informal de 'going to', usada o tempo todo em música e conversa", example:"I'm gonna call you later tonight."},
+      {phrase:"all the lights / all the walls", meaning:"uso de 'all the + substantivo' para generalizar ou enfatizar tudo ao redor", example:"All the noise in the city sometimes makes me want silence."},
+    ],
     vocab: [
-      {en:"wonder", pt:"maravilha / imaginar", audio:"wonder"},
-      {en:"believe", pt:"acreditar", audio:"believe"},
-      {en:"save", pt:"salvar", audio:"save"},
-      {en:"maybe", pt:"talvez", audio:"maybe"},
-      {en:"anyway", pt:"de qualquer forma", audio:"anyway"},
-      {en:"gonna (going to)", pt:"vou / vai (informal)", audio:"going+to"},
-      {en:"backbone", pt:"espinha dorsal / apoio", audio:"backbone"},
-      {en:"shine", pt:"brilhar", audio:"shine"},
+      {en:"wonder", pt:"maravilha / imaginar-se", ipa:"/ˈwʌn.dər/", pos:"substantivo/verbo", cefr:"A2", example:"I wonder what she's thinking right now.", tip:"Pense em 'wonderful' (maravilhoso) pra lembrar o sentido positivo."},
+      {en:"believe", pt:"acreditar", ipa:"/bɪˈliːv/", pos:"verbo", cefr:"A1", example:"I believe you can do this.", tip:"'Be-LIEVE' — o 'lie' no meio ajuda a lembrar a grafia."},
+      {en:"save", pt:"salvar / guardar", ipa:"/seɪv/", pos:"verbo", cefr:"A1", example:"Can you save my seat while I get coffee?", tip:"Mesmo verbo usado pra 'salvar arquivo' no computador!"},
+      {en:"maybe", pt:"talvez", ipa:"/ˈmeɪ.bi/", pos:"advérbio", cefr:"A1", example:"Maybe we should try a different approach.", tip:"May + be = 'pode ser' → talvez."},
+      {en:"anyway", pt:"de qualquer forma / enfim", ipa:"/ˈen.i.weɪ/", pos:"advérbio", cefr:"A2", example:"Anyway, let's move on to the next topic.", tip:"Ótima palavra pra mudar de assunto numa conversa."},
+      {en:"backbone", pt:"espinha dorsal / apoio principal", ipa:"/ˈbæk.boʊn/", pos:"substantivo", cefr:"B1", example:"Small businesses are the backbone of the local economy.", tip:"Back (costas) + bone (osso) = literalmente coluna vertebral."},
+      {en:"shine", pt:"brilhar", ipa:"/ʃaɪn/", pos:"verbo", cefr:"A2", example:"The sun shines every morning in summer.", tip:"Passado irregular: shine → shone."},
+    ],
+    grammar: [
+      {title:"'Gonna' (going to)", explanation:"Na fala natural (e em quase toda música em inglês), 'going to' vira 'gonna'. É informal — ótimo pra entender letras e conversas reais, mas evite escrever assim em textos formais.", example:"I'm gonna study tonight. = I am going to study tonight."},
+      {title:"Present Simple pra rotina e verdades gerais", explanation:"Frases curtas e diretas no presente simples são super comuns em letras de música pra expressar sentimentos atemporais.", example:"You are the one that I need."},
+      {title:"'All the + substantivo' pra generalizar", explanation:"Usar 'all the' antes de um substantivo no plural dá ênfase, como se dissesse 'tudo relacionado a...'.", example:"All the lights in the city were beautiful that night."},
+    ],
+    pronunciation: [
+      {title:"Connected speech", explanation:"Nativos frequentemente conectam o final de uma palavra com o início da próxima, fazendo o inglês soar mais rápido e fluido do que quando aprendemos separado, palavra por palavra."},
+      {title:"Weak forms", explanation:"Palavras pequenas como 'to', 'a', 'and' quase somem na fala rápida — ficam bem reduzidas. É por isso que às vezes é difícil identificar cada palavra numa música."},
+      {title:"Redução de 'going to' → 'gonna'", explanation:"Esse é um dos exemplos mais famosos de redução no inglês falado — praticamente todo nativo usa 'gonna' na fala informal do dia a dia."},
+    ],
+    culture: [
+      {title:"O que foi o Britpop", text:"Movimento musical britânico dos anos 90 que trouxe de volta guitarras marcantes e letras sobre a vida cotidiana no Reino Unido, com forte identidade nacional."},
+      {title:"Oasis x Blur", text:"A rivalidade mais famosa do rock britânico dos anos 90 — as duas bandas competiam diretamente pelas paradas musicais, e os fãs 'escolhiam um lado'."},
+      {title:"Manchester", text:"Cidade de origem do Oasis, no norte da Inglaterra — conhecida por sua cena musical influente e forte identidade cultural própria."},
+      {title:"Um hino atemporal", text:"A música ultrapassou gerações e aparece constantemente em filmes, séries e até memes — um raro caso de canção dos anos 90 que continua extremamente popular entre jovens hoje."},
     ],
     quiz: [
-      {q:"What decade was this song released in?", options:["1970s","1980s","1990s","2000s"], correct:2},
-      {q:"'Wonderwall' is generally understood to be about...", options:["a type of window","someone very important in your life","a music festival","a British city"], correct:1},
-      {q:"What genre is this song?", options:["Hip-hop","Britpop / Rock","Jazz","Country"], correct:1},
-      {q:"The word 'maybe' means...", options:["certamente","talvez","nunca","sempre"], correct:1},
+      {q:"'Word on the street' significa...", options:["Uma rua famosa","Um boato / algo que dizem por aí","Uma palavra em outro idioma","O nome de uma banda"], correct:1},
+      {q:"Quando alguém diz 'fire in your heart', está falando sobre...", options:["Um incêndio literal","Paixão e motivação","Um problema de saúde","Uma festa"], correct:1},
+      {q:"'Gonna' é a forma informal de...", options:["Going to","Going now","Got to","Going away"], correct:0},
+      {q:"'Throw something away' significa...", options:["Guardar algo com cuidado","Desperdiçar / jogar fora uma chance","Jogar uma bola","Comprar algo novo"], correct:1},
+      {q:"'Save someone' pode significar...", options:["Apenas salvar um arquivo no computador","Ajudar alguém numa situação difícil","Economizar dinheiro apenas","Cumprimentar alguém"], correct:1},
+      {q:"O Britpop foi um movimento musical de qual década?", options:["1970s","1980s","1990s","2000s"], correct:2},
+      {q:"Qual cidade é associada ao Oasis?", options:["Londres","Liverpool","Manchester","Birmingham"], correct:2},
+      {q:"'By now' é usado quando...", options:["Algo vai acontecer no futuro distante","Algo já deveria ter acontecido a essa altura","Estamos comprando algo","Estamos contando uma história"], correct:1},
+      {q:"Qual é o principal rival do Oasis no cenário Britpop?", options:["Coldplay","Radiohead","Blur","The Verve"], correct:2},
+      {q:"O termo 'Wonderwall' foi descrito pelo compositor como...", options:["Um lugar específico em Manchester","Um conceito aberto à interpretação de cada ouvinte","O nome de uma pessoa real","Uma palavra do dicionário formal"], correct:1},
     ],
   },
 ];
+
+function ExpandCard({title, icon, T, isL, children, defaultOpen}) {
+  const [open, setOpen] = useState(!!defaultOpen);
+  return (
+    <div style={{borderRadius:14,border:`1.5px solid ${isL?CF+"40":T.line}`,background:T.card,boxShadow:T.sh,marginBottom:12,overflow:"hidden"}}>
+      <button onClick={()=>setOpen(o=>!o)} style={{
+        width:"100%",padding:"14px 18px",display:"flex",alignItems:"center",gap:10,
+        background:"transparent",border:"none",cursor:"pointer",textAlign:"left",
+      }}>
+        <span style={{fontSize:18}}>{icon}</span>
+        <span style={{flex:1,fontSize:14,fontWeight:700,color:T.t1,fontFamily:Fd}}>{title}</span>
+        <span style={{fontSize:12,color:T.t3,transform:open?"rotate(180deg)":"none",transition:"transform 0.2s"}}>▾</span>
+      </button>
+      {open && <div style={{padding:"0 18px 18px"}}>{children}</div>}
+    </div>
+  );
+}
 
 function SongActivity({T, isL}) {
   const [active, setActive] = useState(0);
@@ -318,26 +370,86 @@ function SongActivity({T, isL}) {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
       </div>
 
-      <div style={{padding:"14px 16px",borderRadius:12,background:isL?CF+"15":T.alt,marginBottom:16,border:`1.5px solid ${isL?CF+"30":T.line}`}}>
-        <p style={{margin:0,fontSize:12.5,color:T.t2,lineHeight:1.6,fontWeight:500}}>{song.about}</p>
-        <a href={song.lyricsLink} target="_blank" rel="noopener noreferrer" style={{fontSize:11,fontWeight:700,color:isL?SG:T.sgText,textDecoration:"none",marginTop:8,display:"inline-block"}}>📄 Ver letra completa (Genius) ↗</a>
+      {/* Link carinhoso pra letra completa */}
+      <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 16px",borderRadius:10,background:isL?CF+"12":T.alt,marginBottom:20,border:`1.5px solid ${isL?CF+"30":T.line}`}}>
+        <Heart size={14} color={SG} opacity={0.7}/>
+        <span style={{fontSize:12,color:T.t2,fontWeight:500}}>Quer acompanhar cantando? Veja a letra completa no</span>
+        <a href={song.lyricsLink} target="_blank" rel="noopener noreferrer" style={{fontSize:12,fontWeight:700,color:isL?SG:T.sgText,textDecoration:"none"}}>Genius ↗</a>
       </div>
 
-      <div style={{marginBottom:20}}>
-        <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10}}>🗣️ Vocabulário da música</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:8}}>
-          {song.vocab.map((w,i)=>(
-            <div key={i} style={{padding:"10px 12px",borderRadius:10,background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,boxShadow:T.sh}}>
-              <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd}}>{w.en}</div>
-              <div style={{fontSize:11,color:T.t3,marginBottom:4}}>{w.pt}</div>
-              <a href={`https://dictionary.cambridge.org/dictionary/english/${w.audio}`} target="_blank" rel="noopener noreferrer" style={{fontSize:10,color:CF,fontWeight:700,textDecoration:"none"}}>🔊 ouvir</a>
+      <ExpandCard title="Sobre a música e a banda" icon="🎸" T={T} isL={isL} defaultOpen>
+        <p style={{margin:0,fontSize:12.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>{song.intro}</p>
+      </ExpandCard>
+
+      <ExpandCard title={`O que significa "${song.title}"?`} icon="💭" T={T} isL={isL}>
+        <p style={{margin:0,fontSize:12.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>{song.concept}</p>
+      </ExpandCard>
+
+      <ExpandCard title="Expressões importantes" icon="💬" T={T} isL={isL}>
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {song.expressions.map((ex,i)=>(
+            <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
+              <div style={{fontSize:13,fontWeight:700,color:SG,fontFamily:Fd,marginBottom:3}}>{ex.phrase}</div>
+              <div style={{fontSize:12,color:T.t2,fontWeight:600,marginBottom:5}}>{ex.meaning}</div>
+              <div style={{fontSize:11,color:T.t3,fontStyle:"italic"}}>"{ex.example}"</div>
             </div>
           ))}
         </div>
-      </div>
+      </ExpandCard>
 
-      <div style={{padding:"20px",borderRadius:14,background:T.card,border:`1.5px solid ${isL?CF+"40":T.line}`,boxShadow:T.sh}}>
-        <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.2,marginBottom:14}}>❓ Quiz de compreensão</div>
+      <ExpandCard title="Vocabulary Cards" icon="📝" T={T} isL={isL}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:10}}>
+          {song.vocab.map((w,i)=>(
+            <div key={i} style={{padding:"12px 14px",borderRadius:10,background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,boxShadow:T.sh}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:2}}>
+                <span style={{fontSize:14,fontWeight:700,color:T.t1,fontFamily:Fd}}>{w.en}</span>
+                <span style={{fontSize:9,fontWeight:700,color:SG,background:SG+"12",padding:"2px 6px",borderRadius:5}}>{w.cefr}</span>
+              </div>
+              <div style={{fontSize:10.5,color:T.t3,marginBottom:4}}>{w.ipa} · {w.pos}</div>
+              <div style={{fontSize:12,color:T.t2,fontWeight:600,marginBottom:5}}>{w.pt}</div>
+              <div style={{fontSize:10.5,color:T.t3,fontStyle:"italic",marginBottom:5}}>"{w.example}"</div>
+              <div style={{fontSize:10,color:isL?"#1E3A8A":CF,marginBottom:6}}>💡 {w.tip}</div>
+              <a href={`https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(w.en.split(" ")[0])}`} target="_blank" rel="noopener noreferrer" style={{fontSize:10,color:CF,fontWeight:700,textDecoration:"none"}}>🔊 ouvir pronúncia</a>
+            </div>
+          ))}
+        </div>
+      </ExpandCard>
+
+      <ExpandCard title="Grammar Spotlight" icon="📚" T={T} isL={isL}>
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {song.grammar.map((g,i)=>(
+            <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
+              <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{g.title}</div>
+              <div style={{fontSize:12,color:T.t2,lineHeight:1.6,marginBottom:6,fontWeight:500}}>{g.explanation}</div>
+              <div style={{fontSize:11,color:T.t3,fontStyle:"italic"}}>Ex: "{g.example}"</div>
+            </div>
+          ))}
+        </div>
+      </ExpandCard>
+
+      <ExpandCard title="Pronunciation" icon="🎧" T={T} isL={isL}>
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {song.pronunciation.map((p,i)=>(
+            <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
+              <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{p.title}</div>
+              <div style={{fontSize:12,color:T.t2,lineHeight:1.6,fontWeight:500}}>{p.explanation}</div>
+            </div>
+          ))}
+        </div>
+      </ExpandCard>
+
+      <ExpandCard title="Cultura & Curiosidades" icon="🇬🇧" T={T} isL={isL}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:10}}>
+          {song.culture.map((c,i)=>(
+            <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
+              <div style={{fontSize:12.5,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{c.title}</div>
+              <div style={{fontSize:11.5,color:T.t2,lineHeight:1.6,fontWeight:500}}>{c.text}</div>
+            </div>
+          ))}
+        </div>
+      </ExpandCard>
+
+      <ExpandCard title="Quiz Final" icon="❓" T={T} isL={isL}>
         {song.quiz.map((q,i)=>(
           <div key={i} style={{marginBottom:16}}>
             <div style={{fontSize:13,fontWeight:600,color:T.t1,marginBottom:8}}>{i+1}. {q.q}</div>
@@ -371,6 +483,13 @@ function SongActivity({T, isL}) {
             <button onClick={resetQuiz} style={{padding:"9px 22px",borderRadius:8,border:`1.5px solid ${isL?CF:T.line}`,background:"transparent",color:T.t2,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:Fb}}>Tentar de Novo</button>
           </div>
         )}
+      </ExpandCard>
+
+      <div style={{padding:"18px 20px",borderRadius:14,background:`linear-gradient(135deg,${CF}15,${SG}08)`,border:`1.5px solid ${isL?CF+"30":T.line}`,textAlign:"center"}}>
+        <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:6}}>⭐ O que você levou dessa aula:</div>
+        <div style={{fontSize:11.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>
+          {song.expressions.length} expressões novas · {song.vocab.length} palavras de vocabulário · gramática do "gonna" · pronúncia conectada · contexto cultural do Britpop
+        </div>
       </div>
     </div>
   );
