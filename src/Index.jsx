@@ -536,8 +536,8 @@ export default function App() {
             cursor:"pointer",fontSize:11,color:T.t2,fontFamily:Fb,fontWeight:600,
           }}>{isL?"🌙":"☀️"}</button>
           <div style={{textAlign:"right"}}>
-            <div style={{fontSize:12,fontWeight:600,color:T.t1}}>{s.name}</div>
-            <div style={{fontSize:10,color:T.t3,fontWeight:500}}>{s.currentLevel} · {LLABEL[s.currentLevel]}</div>
+            <div style={{fontSize:16,fontWeight:700,color:T.t1,fontFamily:Fd}}>{s.name}</div>
+            <div style={{fontSize:11,color:T.t3,fontWeight:500}}>{s.currentLevel} · {LLABEL[s.currentLevel]}</div>
           </div>
           <div style={{
             width:36,height:36,borderRadius:"50%",
@@ -613,8 +613,8 @@ export default function App() {
             {/* subtle heart pattern overlay */}
             <div style={{position:"absolute",inset:0,backgroundImage:heartBg,backgroundSize:"60px 60px",opacity:0.08}} />
             <div style={{position:"relative",zIndex:1}}>
-              <div style={{fontSize:22,fontWeight:700,fontFamily:Fd,marginBottom:4}}>Welcome back, {s.name.split(" ")[0]}! 👋</div>
-              <div style={{fontSize:13,opacity:0.9,fontWeight:500}}>Ready for today's study session? Let's go!</div>
+              <div style={{fontSize:22,fontWeight:700,fontFamily:Fd,marginBottom:4}}>Oi, {s.name.split(" ")[0]}! Que bom te ver por aqui ♡</div>
+              <div style={{fontSize:13,opacity:0.9,fontWeight:500}}>Vamos continuar sua jornada no inglês hoje?</div>
             </div>
             <div style={{position:"relative",zIndex:1,fontSize:40}}>🇬🇧</div>
           </div>
@@ -664,39 +664,39 @@ export default function App() {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
                   </div>
                 )}
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10}}>
                   {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].map((l,i)=>{
                     const id=`${level}-${i}`;const soon=!l.url;
                     return(
                       <div key={i} className="hov" onClick={()=>!soon&&setVideo(l.url)} style={{
-                        borderRadius:14,overflow:"hidden",cursor:soon?"default":"pointer",
+                        borderRadius:12,overflow:"hidden",cursor:soon?"default":"pointer",
                         background:T.card,border:`1.5px solid ${isL?CF+"40":T.line}`,
                         opacity:soon?0.4:1,boxShadow:T.sh,
                       }}>
-                        <div style={{height:100,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <div style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
                           {/* Heart pattern overlay on cards */}
                           <div style={{position:"absolute",inset:0,backgroundImage:heartBg,backgroundSize:"50px 50px",opacity:0.06}} />
-                          <span style={{position:"absolute",top:10,left:10,background:SG,color:"#fff",fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6}}>{level}</span>
-                          {l.dur&&<span style={{position:"absolute",bottom:10,right:10,background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:10,padding:"3px 8px",borderRadius:6}}>{l.dur}</span>}
+                          <span style={{position:"absolute",top:6,left:6,background:SG,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5}}>{level}</span>
+                          {l.dur&&<span style={{position:"absolute",bottom:6,right:6,background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:9,padding:"2px 6px",borderRadius:5}}>{l.dur}</span>}
                           {!soon&&(
-                            <div style={{width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.88)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)",zIndex:1}}>
-                              <span style={{fontSize:16,color:SG,marginLeft:2}}>▶</span>
+                            <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.88)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)",zIndex:1}}>
+                              <span style={{fontSize:12,color:SG,marginLeft:2}}>▶</span>
                             </div>
                           )}
-                          {done[id]&&<span style={{position:"absolute",top:10,right:10,background:"#16a34a",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:6,zIndex:1}}>✓</span>}
+                          {done[id]&&<span style={{position:"absolute",top:6,right:6,background:"#16a34a",color:"#fff",fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:5,zIndex:1}}>✓</span>}
                         </div>
-                        <div style={{padding:"14px 16px"}}>
-                          <div style={{fontSize:14,fontWeight:700,color:T.t1,marginBottom:4,lineHeight:1.3}}>{l.title}</div>
-                          <div style={{fontSize:12,color:T.t3,marginBottom:8,fontWeight:500}}>{l.about}</div>
-                          <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+                        <div style={{padding:"8px 10px 10px"}}>
+                          <div style={{fontSize:12,fontWeight:700,color:T.t1,marginBottom:2,lineHeight:1.3}}>{l.title}</div>
+                          <div style={{fontSize:10.5,color:T.t3,marginBottom:6,fontWeight:500}}>{l.about}</div>
+                          <div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"wrap"}}>
                             {(l.skills||[]).map((sk,j)=>(
-                              <span key={j} style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:(SCOL[sk]||"#666")+"15",color:SCOL[sk]||"#666"}}>{sk}</span>
+                              <span key={j} style={{fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,background:(SCOL[sk]||"#666")+"15",color:SCOL[sk]||"#666"}}>{sk}</span>
                             ))}
-                            {l.date&&<span style={{fontSize:10,color:T.t3,marginLeft:"auto",fontWeight:600}}>{l.date}</span>}
+                            {l.date&&<span style={{fontSize:9,color:T.t3,marginLeft:"auto",fontWeight:600}}>{l.date}</span>}
                           </div>
                           {!soon&&(
                             <button onClick={e=>{e.stopPropagation();setDone(p=>({...p,[id]:!p[id]}));}} style={{
-                              marginTop:10,width:"100%",padding:"8px",borderRadius:8,
+                              marginTop:6,width:"100%",padding:"6px",borderRadius:7,
                               border:`1.5px solid ${done[id]?"#16a34a40":isL?CF:T.line}`,
                               background:done[id]?"#16a34a12":"transparent",
                               color:done[id]?"#16a34a":T.t3,
