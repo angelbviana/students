@@ -324,8 +324,8 @@ function ExpandCard({title, icon, T, isL, children, defaultOpen}) {
         background:"transparent",border:"none",cursor:"pointer",textAlign:"left",
       }}>
         <span style={{fontSize:18}}>{icon}</span>
-        <span style={{flex:1,fontSize:14,fontWeight:700,color:T.t1,fontFamily:Fd}}>{title}</span>
-        <span style={{fontSize:12,color:T.t3,transform:open?"rotate(180deg)":"none",transition:"transform 0.2s"}}>▾</span>
+        <span style={{flex:1,fontSize:16,fontWeight:700,color:T.t1,fontFamily:Fd}}>{title}</span>
+        <span style={{fontSize:14,color:T.t3,transform:open?"rotate(180deg)":"none",transition:"transform 0.2s"}}>▾</span>
       </button>
       {open && <div style={{padding:"0 18px 18px"}}>{children}</div>}
     </div>
@@ -350,7 +350,7 @@ function SongActivity({T, isL}) {
             <button key={sg.id} onClick={()=>{setActive(i);resetQuiz();}} style={{
               padding:"8px 16px",borderRadius:10,border:`1.5px solid ${active===i?SG:isL?CF:T.line}`,
               background:active===i?(isL?SG+"10":T.sgSoft):"transparent",
-              color:active===i?SG:T.t2,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:Fb,
+              color:active===i?SG:T.t2,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:Fb,
             }}>{sg.title}</button>
           ))}
         </div>
@@ -359,8 +359,8 @@ function SongActivity({T, isL}) {
       <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
         <Heart size={16} color={SG} opacity={0.6}/>
         <div>
-          <div style={{fontSize:20,fontWeight:700,color:T.t1,fontFamily:Fd}}>{song.title}</div>
-          <div style={{fontSize:12,color:T.t3,fontWeight:600}}>{song.artist} · Nível {song.level}</div>
+          <div style={{fontSize:22,fontWeight:700,color:T.t1,fontFamily:Fd}}>{song.title}</div>
+          <div style={{fontSize:14,color:T.t3,fontWeight:600}}>{song.artist} · Nível {song.level}</div>
         </div>
       </div>
 
@@ -373,25 +373,25 @@ function SongActivity({T, isL}) {
       {/* Link carinhoso pra letra completa */}
       <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 16px",borderRadius:10,background:isL?CF+"12":T.alt,marginBottom:20,border:`1.5px solid ${isL?CF+"30":T.line}`}}>
         <Heart size={14} color={SG} opacity={0.7}/>
-        <span style={{fontSize:12,color:T.t2,fontWeight:500}}>Quer acompanhar cantando? Veja a letra completa no</span>
-        <a href={song.lyricsLink} target="_blank" rel="noopener noreferrer" style={{fontSize:12,fontWeight:700,color:isL?SG:T.sgText,textDecoration:"none"}}>Genius ↗</a>
+        <span style={{fontSize:14,color:T.t2,fontWeight:500}}>Quer acompanhar cantando? Veja a letra completa no</span>
+        <a href={song.lyricsLink} target="_blank" rel="noopener noreferrer" style={{fontSize:14,fontWeight:700,color:isL?SG:T.sgText,textDecoration:"none"}}>Genius ↗</a>
       </div>
 
       <ExpandCard title="Sobre a música e a banda" icon="🎸" T={T} isL={isL} defaultOpen>
-        <p style={{margin:0,fontSize:12.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>{song.intro}</p>
+        <p style={{margin:0,fontSize:14.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>{song.intro}</p>
       </ExpandCard>
 
       <ExpandCard title={`O que significa "${song.title}"?`} icon="💭" T={T} isL={isL}>
-        <p style={{margin:0,fontSize:12.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>{song.concept}</p>
+        <p style={{margin:0,fontSize:14.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>{song.concept}</p>
       </ExpandCard>
 
       <ExpandCard title="Expressões importantes" icon="💬" T={T} isL={isL}>
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
           {song.expressions.map((ex,i)=>(
             <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
-              <div style={{fontSize:13,fontWeight:700,color:SG,fontFamily:Fd,marginBottom:3}}>{ex.phrase}</div>
-              <div style={{fontSize:12,color:T.t2,fontWeight:600,marginBottom:5}}>{ex.meaning}</div>
-              <div style={{fontSize:11,color:T.t3,fontStyle:"italic"}}>"{ex.example}"</div>
+              <div style={{fontSize:15,fontWeight:700,color:SG,fontFamily:Fd,marginBottom:3}}>{ex.phrase}</div>
+              <div style={{fontSize:14,color:T.t2,fontWeight:600,marginBottom:5}}>{ex.meaning}</div>
+              <div style={{fontSize:13,color:T.t3,fontStyle:"italic"}}>"{ex.example}"</div>
             </div>
           ))}
         </div>
@@ -402,14 +402,14 @@ function SongActivity({T, isL}) {
           {song.vocab.map((w,i)=>(
             <div key={i} style={{padding:"12px 14px",borderRadius:10,background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,boxShadow:T.sh}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:2}}>
-                <span style={{fontSize:14,fontWeight:700,color:T.t1,fontFamily:Fd}}>{w.en}</span>
-                <span style={{fontSize:9,fontWeight:700,color:SG,background:SG+"12",padding:"2px 6px",borderRadius:5}}>{w.cefr}</span>
+                <span style={{fontSize:16,fontWeight:700,color:T.t1,fontFamily:Fd}}>{w.en}</span>
+                <span style={{fontSize:10.5,fontWeight:700,color:SG,background:SG+"12",padding:"2px 6px",borderRadius:5}}>{w.cefr}</span>
               </div>
-              <div style={{fontSize:10.5,color:T.t3,marginBottom:4}}>{w.ipa} · {w.pos}</div>
-              <div style={{fontSize:12,color:T.t2,fontWeight:600,marginBottom:5}}>{w.pt}</div>
-              <div style={{fontSize:10.5,color:T.t3,fontStyle:"italic",marginBottom:5}}>"{w.example}"</div>
-              <div style={{fontSize:10,color:isL?"#1E3A8A":CF,marginBottom:6}}>💡 {w.tip}</div>
-              <a href={`https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(w.en.split(" ")[0])}`} target="_blank" rel="noopener noreferrer" style={{fontSize:10,color:CF,fontWeight:700,textDecoration:"none"}}>🔊 ouvir pronúncia</a>
+              <div style={{fontSize:12.5,color:T.t3,marginBottom:4}}>{w.ipa} · {w.pos}</div>
+              <div style={{fontSize:14,color:T.t2,fontWeight:600,marginBottom:5}}>{w.pt}</div>
+              <div style={{fontSize:12.5,color:T.t3,fontStyle:"italic",marginBottom:5}}>"{w.example}"</div>
+              <div style={{fontSize:12,color:isL?"#1E3A8A":CF,marginBottom:6}}>💡 {w.tip}</div>
+              <a href={`https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(w.en.split(" ")[0])}`} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:CF,fontWeight:700,textDecoration:"none"}}>🔊 ouvir pronúncia</a>
             </div>
           ))}
         </div>
@@ -419,9 +419,9 @@ function SongActivity({T, isL}) {
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
           {song.grammar.map((g,i)=>(
             <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
-              <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{g.title}</div>
-              <div style={{fontSize:12,color:T.t2,lineHeight:1.6,marginBottom:6,fontWeight:500}}>{g.explanation}</div>
-              <div style={{fontSize:11,color:T.t3,fontStyle:"italic"}}>Ex: "{g.example}"</div>
+              <div style={{fontSize:15,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{g.title}</div>
+              <div style={{fontSize:14,color:T.t2,lineHeight:1.6,marginBottom:6,fontWeight:500}}>{g.explanation}</div>
+              <div style={{fontSize:13,color:T.t3,fontStyle:"italic"}}>Ex: "{g.example}"</div>
             </div>
           ))}
         </div>
@@ -431,8 +431,8 @@ function SongActivity({T, isL}) {
         <div style={{display:"flex",flexDirection:"column",gap:10}}>
           {song.pronunciation.map((p,i)=>(
             <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
-              <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{p.title}</div>
-              <div style={{fontSize:12,color:T.t2,lineHeight:1.6,fontWeight:500}}>{p.explanation}</div>
+              <div style={{fontSize:15,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{p.title}</div>
+              <div style={{fontSize:14,color:T.t2,lineHeight:1.6,fontWeight:500}}>{p.explanation}</div>
             </div>
           ))}
         </div>
@@ -442,8 +442,8 @@ function SongActivity({T, isL}) {
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:10}}>
           {song.culture.map((c,i)=>(
             <div key={i} style={{padding:"12px 14px",borderRadius:10,background:isL?CL:T.alt,border:`1px solid ${isL?CF+"25":T.line}`}}>
-              <div style={{fontSize:12.5,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{c.title}</div>
-              <div style={{fontSize:11.5,color:T.t2,lineHeight:1.6,fontWeight:500}}>{c.text}</div>
+              <div style={{fontSize:14.5,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{c.title}</div>
+              <div style={{fontSize:13.5,color:T.t2,lineHeight:1.6,fontWeight:500}}>{c.text}</div>
             </div>
           ))}
         </div>
@@ -452,7 +452,7 @@ function SongActivity({T, isL}) {
       <ExpandCard title="Quiz Final" icon="❓" T={T} isL={isL}>
         {song.quiz.map((q,i)=>(
           <div key={i} style={{marginBottom:16}}>
-            <div style={{fontSize:13,fontWeight:600,color:T.t1,marginBottom:8}}>{i+1}. {q.q}</div>
+            <div style={{fontSize:15,fontWeight:600,color:T.t1,marginBottom:8}}>{i+1}. {q.q}</div>
             <div style={{display:"flex",flexDirection:"column",gap:6}}>
               {q.options.map((opt,oi)=>{
                 const isSelected = quizAnswers[i]===oi;
@@ -463,7 +463,7 @@ function SongActivity({T, isL}) {
                     textAlign:"left",padding:"9px 14px",borderRadius:9,cursor:quizChecked?"default":"pointer",
                     border:`1.5px solid ${isCorrect?"#16a34a":isWrong?SG:isSelected?(isL?CF:T.sg):isL?CF+"30":T.line}`,
                     background:isCorrect?"#16a34a12":isWrong?SG+"10":isSelected?(isL?CF+"15":T.sgSoft):"transparent",
-                    color:T.t1,fontSize:12.5,fontFamily:Fb,fontWeight:isSelected?600:500,
+                    color:T.t1,fontSize:14.5,fontFamily:Fb,fontWeight:isSelected?600:500,
                   }}>{opt}{isCorrect?" ✓":isWrong?" ✗":""}</button>
                 );
               })}
@@ -473,21 +473,21 @@ function SongActivity({T, isL}) {
         {!quizChecked ? (
           <button onClick={checkQuiz} disabled={Object.keys(quizAnswers).length<song.quiz.length} style={{
             width:"100%",padding:"12px",borderRadius:10,border:"none",cursor:"pointer",
-            background:`linear-gradient(135deg,${SG},#B91C1C)`,color:"#fff",fontSize:14,fontWeight:700,fontFamily:Fd,
+            background:`linear-gradient(135deg,${SG},#B91C1C)`,color:"#fff",fontSize:16,fontWeight:700,fontFamily:Fd,
             opacity:Object.keys(quizAnswers).length<song.quiz.length?0.5:1,
           }}>Verificar Respostas ♡</button>
         ) : (
           <div style={{textAlign:"center",padding:"16px",borderRadius:12,background:score===song.quiz.length?"#16a34a12":CF+"15"}}>
             <div style={{fontSize:26,marginBottom:6}}>{score===song.quiz.length?"🎉":"💪"}</div>
-            <div style={{fontSize:16,fontWeight:700,fontFamily:Fd,color:T.t1,marginBottom:10}}>{score}/{song.quiz.length} corretas</div>
-            <button onClick={resetQuiz} style={{padding:"9px 22px",borderRadius:8,border:`1.5px solid ${isL?CF:T.line}`,background:"transparent",color:T.t2,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:Fb}}>Tentar de Novo</button>
+            <div style={{fontSize:18,fontWeight:700,fontFamily:Fd,color:T.t1,marginBottom:10}}>{score}/{song.quiz.length} corretas</div>
+            <button onClick={resetQuiz} style={{padding:"9px 22px",borderRadius:8,border:`1.5px solid ${isL?CF:T.line}`,background:"transparent",color:T.t2,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:Fb}}>Tentar de Novo</button>
           </div>
         )}
       </ExpandCard>
 
       <div style={{padding:"18px 20px",borderRadius:14,background:`linear-gradient(135deg,${CF}15,${SG}08)`,border:`1.5px solid ${isL?CF+"30":T.line}`,textAlign:"center"}}>
-        <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:6}}>⭐ O que você levou dessa aula:</div>
-        <div style={{fontSize:11.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>
+        <div style={{fontSize:15,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:6}}>⭐ O que você levou dessa aula:</div>
+        <div style={{fontSize:13.5,color:T.t2,lineHeight:1.7,fontWeight:500}}>
           {song.expressions.length} expressões novas · {song.vocab.length} palavras de vocabulário · gramática do "gonna" · pronúncia conectada · contexto cultural do Britpop
         </div>
       </div>
