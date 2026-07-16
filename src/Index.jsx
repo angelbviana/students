@@ -442,6 +442,7 @@ export default function App() {
     .row-hov:hover{background:${isL?CF+"15":T.sgSoft}}
     .res-hov:hover{transform:translateY(-1px);border-color:${isL?CF:T.sgMid}}
     .av-input:focus{border-color:${isL?CF:T.sg};outline:none}
+    .lesson-card-hover:hover .lesson-play-overlay{opacity:1;}
   `;
 
   // ── LOGIN ──
@@ -668,22 +669,22 @@ export default function App() {
                   {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].map((l,i)=>{
                     const id=`${level}-${i}`;const soon=!l.url;
                     return(
-                      <div key={i} className="hov" onClick={()=>!soon&&setVideo(l.url)} style={{
+                      <div key={i} className="hov lesson-card-hover" onClick={()=>!soon&&setVideo(l.url)} style={{
                         borderRadius:12,overflow:"hidden",cursor:soon?"default":"pointer",
                         background:T.card,border:`1.5px solid ${isL?CF+"40":T.line}`,
                         opacity:soon?0.4:1,boxShadow:T.sh,
                       }}>
-                        <div style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
-                          {/* Heart pattern overlay on cards */}
-                          <div style={{position:"absolute",inset:0,backgroundImage:heartBg,backgroundSize:"50px 50px",opacity:0.06}} />
-                          <span style={{position:"absolute",top:6,left:6,background:SG,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5}}>{level}</span>
-                          {l.dur&&<span style={{position:"absolute",bottom:6,right:6,background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:9,padding:"2px 6px",borderRadius:5}}>{l.dur}</span>}
+                        <div className="lesson-cover-hover" style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
+                          <span style={{position:"absolute",top:6,left:6,background:SG,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{level}</span>
+                          {l.dur&&<span style={{position:"absolute",bottom:6,right:6,background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:9,padding:"2px 6px",borderRadius:5,zIndex:2}}>{l.dur}</span>}
                           {!soon&&(
-                            <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.88)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)",zIndex:1}}>
-                              <span style={{fontSize:12,color:SG,marginLeft:2}}>▶</span>
+                            <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
+                              <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)"}}>
+                                <span style={{fontSize:12,color:SG,marginLeft:2}}>▶</span>
+                              </div>
                             </div>
                           )}
-                          {done[id]&&<span style={{position:"absolute",top:6,right:6,background:"#16a34a",color:"#fff",fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:5,zIndex:1}}>✓</span>}
+                          {done[id]&&<span style={{position:"absolute",top:6,right:6,background:"#16a34a",color:"#fff",fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:5,zIndex:2}}>✓</span>}
                         </div>
                         <div style={{padding:"8px 10px 10px"}}>
                           <div style={{fontSize:12,fontWeight:700,color:T.t1,marginBottom:2,lineHeight:1.3}}>{l.title}</div>
