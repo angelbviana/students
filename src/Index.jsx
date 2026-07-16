@@ -251,170 +251,127 @@ function Heart({size=16,color=SG,opacity=1}){
   return <svg width={size} height={size} viewBox="0 0 24 24" fill={color} opacity={opacity} style={{flexShrink:0}}><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>;
 }
 
-function MusicSection({songs,T,isL}){
-  const [active,setActive]=useState(null);
-  const [answers,setAnswers]=useState({});
-  const [checked,setChecked]=useState(false);
-  const [score,setScore]=useState(null);
+// ── SONG ACTIVITIES (no lyrics reproduced — video + vocab + comprehension quiz) ──
+const SONGS = [
+  {
+    id: "wonderwall",
+    title: "Wonderwall",
+    artist: "Oasis",
+    youtubeId: "6hzrDeceEKc",
+    lyricsLink: "https://genius.com/Oasis-wonderwall-lyrics",
+    level: "A2-B1",
+    about: "Uma das músicas mais icônicas do rock britânico dos anos 90. Ótima para praticar vocabulário sobre sentimentos e relacionamentos.",
+    vocab: [
+      {en:"wonder", pt:"maravilha / imaginar", audio:"wonder"},
+      {en:"believe", pt:"acreditar", audio:"believe"},
+      {en:"save", pt:"salvar", audio:"save"},
+      {en:"maybe", pt:"talvez", audio:"maybe"},
+      {en:"anyway", pt:"de qualquer forma", audio:"anyway"},
+      {en:"gonna (going to)", pt:"vou / vai (informal)", audio:"going+to"},
+      {en:"backbone", pt:"espinha dorsal / apoio", audio:"backbone"},
+      {en:"shine", pt:"brilhar", audio:"shine"},
+    ],
+    quiz: [
+      {q:"What decade was this song released in?", options:["1970s","1980s","1990s","2000s"], correct:2},
+      {q:"'Wonderwall' is generally understood to be about...", options:["a type of window","someone very important in your life","a music festival","a British city"], correct:1},
+      {q:"What genre is this song?", options:["Hip-hop","Britpop / Rock","Jazz","Country"], correct:1},
+      {q:"The word 'maybe' means...", options:["certamente","talvez","nunca","sempre"], correct:1},
+    ],
+  },
+];
 
-  const openSong=(i)=>{setActive(i);setAnswers({});setChecked(false);setScore(null);};
+function SongActivity({T, isL}) {
+  const [active, setActive] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizChecked, setQuizChecked] = useState(false);
+  const song = SONGS[active];
 
-  const parseLyrics=(text)=>{
-    const parts=[];
-    let blankIdx=0;
-    text.split("\n").forEach((line,li)=>{
-      const segs=line.split(/\[([^\]]+)\]/);
-      const lineParts=[];
-      segs.forEach((seg,si)=>{
-        if(si%2===0){lineParts.push({type:"text",value:seg});}
-        else{lineParts.push({type:"blank",value:seg,idx:blankIdx});blankIdx++;}
-      });
-      parts.push(lineParts);
-    });
-    return {parts,totalBlanks:blankIdx};
-  };
+  const checkQuiz = () => setQuizChecked(true);
+  const resetQuiz = () => { setQuizAnswers({}); setQuizChecked(false); };
+  const score = song.quiz.filter((q,i)=>quizAnswers[i]===q.correct).length;
 
-  const checkAnswers=(song)=>{
-    const {parts}=parseLyrics(song.lyrics);
-    let correct=0;let total=0;
-    parts.forEach(line=>line.forEach(p=>{
-      if(p.type==="blank"){
-        total++;
-        if((answers[p.idx]||"").toLowerCase().trim()===p.value.toLowerCase().trim())correct++;
-      }
-    }));
-    setScore({correct,total});
-    setChecked(true);
-  };
-
-  if(songs.length===0)return <p style={{textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhuma atividade musical 🎵</p>;
-
-  if(active===null){
-    return(
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-        {songs.map((m,i)=>(
-          <div key={i} className="hov" onClick={()=>openSong(i)} style={{
-            borderRadius:14,overflow:"hidden",cursor:"pointer",
-            background:T.card,border:`1.5px solid ${isL?SG+"20":T.line}`,boxShadow:T.sh,
-          }}>
-            <div style={{height:80,background:`linear-gradient(135deg,${SG}18,${CF}25)`,display:"flex",alignItems:"center",justifyContent:"center",position:"relative"}}>
-              <div style={{position:"absolute",inset:0,backgroundImage:heartBg,backgroundSize:"50px 50px",opacity:0.05}} />
-              <span style={{fontSize:36,zIndex:1}}>🎵</span>
-              <span style={{position:"absolute",top:8,right:10,fontSize:9,fontWeight:700,color:SG,background:CL,padding:"2px 8px",borderRadius:5}}>{m.diff}</span>
-            </div>
-            <div style={{padding:"14px 16px"}}>
-              <div style={{fontSize:15,fontWeight:700,color:T.t1,fontFamily:Fd,marginBottom:4}}>{m.title}</div>
-              <div style={{fontSize:12,color:T.t3,fontWeight:500}}>{m.tip}</div>
-              <div style={{marginTop:10,padding:"7px",borderRadius:8,background:isL?CF+"15":T.sgSoft,textAlign:"center",fontSize:11,fontWeight:700,color:isL?SG:T.sgText}}>
-                ▶ Ouvir & Praticar
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  const song=songs[active];
-  const {parts,totalBlanks}=parseLyrics(song.lyrics);
-  const yt=ytId(song.video);
-
-  return(
+  return (
     <div>
-      {/* Back button */}
-      <button onClick={()=>setActive(null)} style={{
-        background:"none",border:"none",cursor:"pointer",color:T.t3,fontSize:13,fontWeight:600,
-        fontFamily:Fb,marginBottom:16,padding:0,display:"flex",alignItems:"center",gap:6,
-      }}>← Voltar às músicas</button>
+      {SONGS.length > 1 && (
+        <div style={{display:"flex",gap:8,marginBottom:16,flexWrap:"wrap"}}>
+          {SONGS.map((sg,i)=>(
+            <button key={sg.id} onClick={()=>{setActive(i);resetQuiz();}} style={{
+              padding:"8px 16px",borderRadius:10,border:`1.5px solid ${active===i?SG:isL?CF:T.line}`,
+              background:active===i?(isL?SG+"10":T.sgSoft):"transparent",
+              color:active===i?SG:T.t2,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:Fb,
+            }}>{sg.title}</button>
+          ))}
+        </div>
+      )}
 
-      {/* Song header */}
       <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
         <Heart size={16} color={SG} opacity={0.6}/>
         <div>
           <div style={{fontSize:20,fontWeight:700,color:T.t1,fontFamily:Fd}}>{song.title}</div>
-          <span style={{fontSize:10,fontWeight:700,color:SG,textTransform:"uppercase",letterSpacing:1}}>{song.diff}</span>
+          <div style={{fontSize:12,color:T.t3,fontWeight:600}}>{song.artist} · Nível {song.level}</div>
         </div>
       </div>
 
-      {/* YouTube embed */}
-      {yt&&(
-        <div style={{marginBottom:20,borderRadius:14,overflow:"hidden",aspectRatio:"16/9",background:"#000",border:`2px solid ${isL?CF:T.line}`}}>
-          <iframe src={`https://www.youtube.com/embed/${yt}?rel=0`}
-            style={{width:"100%",height:"100%",border:"none"}}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-        </div>
-      )}
-
-      {/* Tip */}
-      <div style={{padding:"12px 16px",borderRadius:10,background:isL?CF+"18":T.alt,marginBottom:16,
-        border:`1.5px solid ${isL?CF+"30":T.line}`,display:"flex",alignItems:"center",gap:8}}>
-        <span style={{fontSize:16}}>💡</span>
-        <span style={{fontSize:12,color:T.t2,fontWeight:600}}>{song.tip}</span>
+      <div style={{marginBottom:16,borderRadius:14,overflow:"hidden",aspectRatio:"16/9",background:"#000",border:`2px solid ${isL?CF:T.line}`}}>
+        <iframe src={`https://www.youtube.com/embed/${song.youtubeId}?rel=0`}
+          style={{width:"100%",height:"100%",border:"none"}} title={song.title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
       </div>
 
-      {/* Lyrics with blanks */}
-      <div style={{padding:"24px",borderRadius:14,background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,boxShadow:T.sh,marginBottom:16}}>
-        <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.5,marginBottom:16}}>
-          🎤 Complete a letra
-        </div>
-        <div style={{display:"flex",flexDirection:"column",gap:10}}>
-          {parts.map((line,li)=>(
-            <div key={li} style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:4,lineHeight:2}}>
-              {line.map((p,pi)=>{
-                if(p.type==="text")return <span key={pi} style={{fontSize:15,color:T.t1,fontWeight:500}}>{p.value}</span>;
-                const val=answers[p.idx]||"";
-                const isCorrect=checked&&val.toLowerCase().trim()===p.value.toLowerCase().trim();
-                const isWrong=checked&&!isCorrect;
-                return(
-                  <span key={pi} style={{display:"inline-flex",flexDirection:"column",alignItems:"center"}}>
-                    <input
-                      value={checked&&isWrong?p.value:val}
-                      onChange={e=>{if(!checked)setAnswers(prev=>({...prev,[p.idx]:e.target.value}));}}
-                      disabled={checked}
-                      placeholder="___"
-                      style={{
-                        width:Math.max(p.value.length*11,50),padding:"4px 8px",borderRadius:6,
-                        border:`2px solid ${checked?(isCorrect?"#16a34a":SG):(isL?CF:T.lh)}`,
-                        background:checked?(isCorrect?"#16a34a12":SG+"10"):(isL?CL:T.alt),
-                        color:checked?(isCorrect?"#16a34a":SG):T.t1,
-                        fontSize:14,fontWeight:700,fontFamily:Fb,textAlign:"center",
-                        outline:"none",
-                      }}
-                    />
-                  </span>
-                );
-              })}
+      <div style={{padding:"14px 16px",borderRadius:12,background:isL?CF+"15":T.alt,marginBottom:16,border:`1.5px solid ${isL?CF+"30":T.line}`}}>
+        <p style={{margin:0,fontSize:12.5,color:T.t2,lineHeight:1.6,fontWeight:500}}>{song.about}</p>
+        <a href={song.lyricsLink} target="_blank" rel="noopener noreferrer" style={{fontSize:11,fontWeight:700,color:isL?SG:T.sgText,textDecoration:"none",marginTop:8,display:"inline-block"}}>📄 Ver letra completa (Genius) ↗</a>
+      </div>
+
+      <div style={{marginBottom:20}}>
+        <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10}}>🗣️ Vocabulário da música</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:8}}>
+          {song.vocab.map((w,i)=>(
+            <div key={i} style={{padding:"10px 12px",borderRadius:10,background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,boxShadow:T.sh}}>
+              <div style={{fontSize:13,fontWeight:700,color:T.t1,fontFamily:Fd}}>{w.en}</div>
+              <div style={{fontSize:11,color:T.t3,marginBottom:4}}>{w.pt}</div>
+              <a href={`https://dictionary.cambridge.org/dictionary/english/${w.audio}`} target="_blank" rel="noopener noreferrer" style={{fontSize:10,color:CF,fontWeight:700,textDecoration:"none"}}>🔊 ouvir</a>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Check / Score */}
-      {!checked?(
-        <button onClick={()=>checkAnswers(song)} style={{
-          width:"100%",padding:"14px",borderRadius:10,border:"none",cursor:"pointer",
-          background:`linear-gradient(135deg,${SG},#B91C1C)`,
-          color:"#fff",fontSize:15,fontWeight:700,fontFamily:Fd,
-          boxShadow:`0 4px 14px ${SG}30`,
-        }}>Verificar Respostas ♡</button>
-      ):(
-        <div style={{padding:"20px",borderRadius:14,textAlign:"center",
-          background:score.correct===score.total?`linear-gradient(135deg,#16a34a15,#16a34a08)`:`linear-gradient(135deg,${CF}15,${SG}08)`,
-          border:`1.5px solid ${score.correct===score.total?"#16a34a30":CF+"30"}`,
-        }}>
-          <div style={{fontSize:32,marginBottom:8}}>{score.correct===score.total?"🎉":"💪"}</div>
-          <div style={{fontSize:20,fontWeight:700,fontFamily:Fd,color:T.t1,marginBottom:4}}>
-            {score.correct}/{score.total} {score.correct===score.total?"Perfeito!":"Continue praticando!"}
+      <div style={{padding:"20px",borderRadius:14,background:T.card,border:`1.5px solid ${isL?CF+"40":T.line}`,boxShadow:T.sh}}>
+        <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.2,marginBottom:14}}>❓ Quiz de compreensão</div>
+        {song.quiz.map((q,i)=>(
+          <div key={i} style={{marginBottom:16}}>
+            <div style={{fontSize:13,fontWeight:600,color:T.t1,marginBottom:8}}>{i+1}. {q.q}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {q.options.map((opt,oi)=>{
+                const isSelected = quizAnswers[i]===oi;
+                const isCorrect = quizChecked && oi===q.correct;
+                const isWrong = quizChecked && isSelected && oi!==q.correct;
+                return (
+                  <button key={oi} disabled={quizChecked} onClick={()=>setQuizAnswers(p=>({...p,[i]:oi}))} style={{
+                    textAlign:"left",padding:"9px 14px",borderRadius:9,cursor:quizChecked?"default":"pointer",
+                    border:`1.5px solid ${isCorrect?"#16a34a":isWrong?SG:isSelected?(isL?CF:T.sg):isL?CF+"30":T.line}`,
+                    background:isCorrect?"#16a34a12":isWrong?SG+"10":isSelected?(isL?CF+"15":T.sgSoft):"transparent",
+                    color:T.t1,fontSize:12.5,fontFamily:Fb,fontWeight:isSelected?600:500,
+                  }}>{opt}{isCorrect?" ✓":isWrong?" ✗":""}</button>
+                );
+              })}
+            </div>
           </div>
-          <p style={{fontSize:12,color:T.t3,fontWeight:500,margin:"0 0 12px"}}>
-            {score.correct===score.total?"Mandou muito bem! 🇬🇧":"As respostas corretas estão em vermelho acima."}
-          </p>
-          <button onClick={()=>{setAnswers({});setChecked(false);setScore(null);}} style={{
-            padding:"10px 24px",borderRadius:8,border:`1.5px solid ${isL?CF:T.line}`,
-            background:"transparent",color:T.t2,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:Fb,
-          }}>Tentar de Novo</button>
-        </div>
-      )}
+        ))}
+        {!quizChecked ? (
+          <button onClick={checkQuiz} disabled={Object.keys(quizAnswers).length<song.quiz.length} style={{
+            width:"100%",padding:"12px",borderRadius:10,border:"none",cursor:"pointer",
+            background:`linear-gradient(135deg,${SG},#B91C1C)`,color:"#fff",fontSize:14,fontWeight:700,fontFamily:Fd,
+            opacity:Object.keys(quizAnswers).length<song.quiz.length?0.5:1,
+          }}>Verificar Respostas ♡</button>
+        ) : (
+          <div style={{textAlign:"center",padding:"16px",borderRadius:12,background:score===song.quiz.length?"#16a34a12":CF+"15"}}>
+            <div style={{fontSize:26,marginBottom:6}}>{score===song.quiz.length?"🎉":"💪"}</div>
+            <div style={{fontSize:16,fontWeight:700,fontFamily:Fd,color:T.t1,marginBottom:10}}>{score}/{song.quiz.length} corretas</div>
+            <button onClick={resetQuiz} style={{padding:"9px 22px",borderRadius:8,border:`1.5px solid ${isL?CF:T.line}`,background:"transparent",color:T.t2,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:Fb}}>Tentar de Novo</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -875,7 +832,7 @@ export default function App() {
 
             {/* MÚSICA */}
             {tab==="music"&&(
-              <MusicSection songs={s.music[level]||[]} T={T} isL={isL} />
+              <SongActivity T={T} isL={isL} />
             )}
 
             {/* MATERIAIS */}
