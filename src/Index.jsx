@@ -665,7 +665,7 @@ export default function App() {
                   </div>
                 )}
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-                  {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:"",skills:[],dur:""})), ...(s.lessons[level]||[])].map((l,i)=>{
+                  {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].map((l,i)=>{
                     const id=`${level}-${i}`;const soon=!l.url;
                     return(
                       <div key={i} className="hov" onClick={()=>!soon&&setVideo(l.url)} style={{
@@ -673,7 +673,7 @@ export default function App() {
                         background:T.card,border:`1.5px solid ${isL?CF+"40":T.line}`,
                         opacity:soon?0.4:1,boxShadow:T.sh,
                       }}>
-                        <div style={{height:100,position:"relative",background:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <div style={{height:100,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
                           {/* Heart pattern overlay on cards */}
                           <div style={{position:"absolute",inset:0,backgroundImage:heartBg,backgroundSize:"50px 50px",opacity:0.06}} />
                           <span style={{position:"absolute",top:10,left:10,background:SG,color:"#fff",fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6}}>{level}</span>
