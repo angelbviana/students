@@ -15,6 +15,15 @@ async function fetchAppState() {
 const TEACHER = { name: "Angel Viana", whatsapp: "5548999999999" };
 
 const STUDENTS = {
+  "angelica-viana": {
+    email: "hello.angelicaviana@gmail.com", code: "ANGEL2025", name: "Angélica Viana",
+    currentLevel: "C1", startDate: "2026-07-15", unlockedLevels: ["A1","A2","B1","B2","C1"],
+    lessons: { A1:[], A2:[], B1:[], B2:[], C1:[], C2:[] },
+    tasks: { A1:[], A2:[], B1:[], B2:[], C1:[], C2:[] },
+    music: { A1:[], A2:[], B1:[], B2:[], C1:[], C2:[] },
+    pdfs: { A1:[], A2:[], B1:[], B2:[], C1:[], C2:[] },
+    wordBank: { A1:[], A2:[], B1:[], B2:[], C1:[], C2:[] },
+  },
   "maria-silva": {
     email: "maria@email.com", code: "ANGEL2025", name: "Maria Silva",
     currentLevel: "A2", startDate: "2025-03-01", unlockedLevels: ["A1", "A2"],
@@ -383,12 +392,43 @@ export default function App() {
   const T = mode==="light"?LIGHT:DARK;
   const isL = mode==="light";
 
-  const doLogin = () => {
-    const found = Object.entries(STUDENTS).find(([k,s])=>s.email.toLowerCase()===email.toLowerCase().trim()&&s.code===code.trim());
-    if(found){setStudent(found[1]);setLevel(found[1].currentLevel);setLoggedIn(true);setErr("");}
-    else{setErr("Email ou código inválido.");}
+  const [loading, setLoading] = useState(false);
+
+  const doLogin = async () => {
+    const emailClean = email.toLowerCase().trim();
+    const codeClean = code.trim();
+    if(!emailClean||!codeClean){setErr("Preencha email e código.");return;}
+    if(codeClean!=="ANGEL2025"){setErr("Código inválido.");return;}
+    setLoading(true);setErr("");
+    try {
+      const appData = await fetchAppState();
+      if(!appData){setErr("Erro ao conectar. Tente novamente.");setLoading(false);return;}
+      const allStudents = appData.students||[];
+      const found = allStudents.find(s=>s.email?.toLowerCase()===emailClean && s.status==="ativo");
+      if(!found){setErr("Email não encontrado ou aluno inativo.");setLoading(false);return;}
+      // map level from "Básico (A1)" → "A1"
+      const lvlMatch = (found.level||"A1").match(/\(([^)]+)\)/);
+      const lvl = lvlMatch?lvlMatch[1]:"A1";
+      // build student object compatible with portal
+      const st = {
+        ...found,
+        currentLevel: lvl,
+        unlockedLevels: ["A1","A2","B1","B2","C1","C2"].slice(0,["A1","A2","B1","B2","C1","C2"].indexOf(lvl)+1),
+        lessons:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
+        tasks:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
+        music:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
+        pdfs:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
+        wordBank:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
+      };
+      // get homework for this student
+      const allHw = appData.homework||[];
+      const myHw = allHw.filter(h=>h.studentId===found.id);
+      setSbHomework(myHw);
+      setStudent(st);setLevel(lvl);setLoggedIn(true);
+    } catch(e){setErr("Erro de conexão. Tente novamente.");}
+    setLoading(false);
   };
-  const doLogout = ()=>{setLoggedIn(false);setStudent(null);setEmail("");setCode("");setDone({});setTaskDone({});setTab("lessons");};
+  const doLogout = ()=>{setLoggedIn(false);setStudent(null);setEmail("");setCode("");setDone({});setTaskDone({});setTab("lessons");setSbHomework([]);};
 
   const css = `
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap');
@@ -436,12 +476,12 @@ export default function App() {
                 style={{width:"100%",padding:"12px 16px",borderRadius:10,border:`2px solid ${isL?CF+"50":DARK.line}`,background:isL?"#fff":DARK.inp,color:isL?LIGHT.t1:DARK.t1,fontSize:14,fontFamily:Fb,fontWeight:500}} />
             </div>
             {err&&<p style={{color:SG,fontSize:12,margin:0,fontWeight:600}}>{err}</p>}
-            <button onClick={doLogin} style={{
-              padding:"14px",borderRadius:10,border:"none",cursor:"pointer",
+            <button onClick={doLogin} disabled={loading} style={{
+              padding:"14px",borderRadius:10,border:"none",cursor:loading?"not-allowed":"pointer",
               background:`linear-gradient(135deg, ${SG}, #B91C1C)`,
               color:"#fff",fontSize:15,fontWeight:700,fontFamily:Fd,marginTop:4,
-              boxShadow:`0 4px 14px ${SG}30`,letterSpacing:0.5,
-            }}>Entrar ♡</button>
+              boxShadow:`0 4px 14px ${SG}30`,letterSpacing:0.5,opacity:loading?0.7:1,
+            }}>{loading?"Entrando...":"Entrar ♡"}</button>
           </div>
           <p style={{fontSize:12,color:isL?LIGHT.t3:DARK.t3,marginTop:24,fontWeight:500}}>
             Sem acesso?{" "}
@@ -691,11 +731,10 @@ export default function App() {
                               display:"flex",alignItems:"center",justifyContent:"center",
                             }}>✓</button>
                             <div style={{flex:1}}>
-                              <div style={{fontSize:14,fontWeight:600,color:T.t1,marginBottom:4,textDecoration:isDone?"line-through":"none"}}>{t.title||t.description||t.descricao}</div>
-                              {(t.details||t.message||t.mensagem)&&<div style={{fontSize:12,color:T.t2,lineHeight:1.5,marginBottom:6,fontWeight:500}}>{t.details||t.message||t.mensagem}</div>}
+                              <div style={{fontSize:14,fontWeight:600,color:T.t1,marginBottom:4,textDecoration:isDone?"line-through":"none"}}>{t.description||t.title||t.descricao}</div>
                               <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-                                <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:isDone?"#16a34a15":SG+"12",color:isDone?"#16a34a":SG}}>{isDone?"Concluída ✓":`Prazo: ${t.due||t.prazo||t.dueDate||"—"}`}</span>
-                                {material&&<a href={material} target="_blank" rel="noopener noreferrer" style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:"#3b82f615",color:"#3b82f6",textDecoration:"none"}}>📎 Material</a>}
+                                <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:isDone?"#16a34a15":SG+"12",color:isDone?"#16a34a":SG}}>{isDone?"Concluída ✓":`Prazo: ${t.dueDate||t.due||"—"}`}</span>
+                                {t.link&&<a href={t.link} target="_blank" rel="noopener noreferrer" style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:"#3b82f615",color:"#3b82f6",textDecoration:"none"}}>📎 {t.linkType||"Material"}</a>}
                               </div>
                             </div>
                           </div>
