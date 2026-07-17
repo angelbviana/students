@@ -518,21 +518,6 @@ export default function App() {
   const [vocabFlip, setVocabFlip] = useState({});
   const [vocabSearch, setVocabSearch] = useState("");
 
-  // busca deveres do Supabase ao fazer login
-  useEffect(() => {
-    if (!loggedIn || !student) return;
-    fetchAppState().then(data => {
-      if (!data) return;
-      // deveres ficam em data.homework ou data.deveres
-      const hw = data.homework || data.deveres || data.tasks || [];
-      // filtra só os deveres deste aluno pelo email
-      const mine = Array.isArray(hw)
-        ? hw.filter(h => h.studentEmail?.toLowerCase() === student.email?.toLowerCase() || h.student_email?.toLowerCase() === student.email?.toLowerCase())
-        : [];
-      setSbHomework(mine);
-    }).catch(() => {});
-  }, [loggedIn, student]);
-
   const T = mode==="light"?LIGHT:DARK;
   const isL = mode==="light";
 
