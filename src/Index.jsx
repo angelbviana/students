@@ -564,9 +564,18 @@ export default function App() {
         pdfs:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
         wordBank:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
       };
-      // get homework for this student (match by id, with name fallback for safety)
+      // get homework for this student - try all possible matches
       const allHw = appData.homework||[];
-      const myHw = allHw.filter(h=>h.studentId===found.id || (h.studentName&&h.studentName.toLowerCase()===found.name?.toLowerCase()));
+      const foundId = found.id||found._id||"";
+      const foundName = (found.name||"").toLowerCase().trim();
+      console.log("DEBUG LOGIN - found.id:", foundId, "found.name:", foundName);
+      console.log("DEBUG ALL HW studentIds:", allHw.map(h=>h.studentId));
+      const myHw = allHw.filter(h=>{
+        const hId = (h.studentId||"").trim();
+        const hName = (h.studentName||"").toLowerCase().trim();
+        return hId===foundId || hId===foundId.trim() || (hName&&hName===foundName);
+      });
+      console.log("DEBUG myHw found:", myHw.length, "deveres");
       setSbHomework(myHw);
       const allLessons = appData.lessons||[];
       const myLessons = allLessons.filter(l=>l.studentId===found.id || (l.studentName&&l.studentName.toLowerCase()===found.name?.toLowerCase()));
