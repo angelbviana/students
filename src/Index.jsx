@@ -511,6 +511,9 @@ export default function App() {
   const [navOpen, setNavOpen] = useState(false);
   const [sbHomework, setSbHomework] = useState([]);
   const [sbLessons, setSbLessons] = useState([]);
+  const [extraLessons, setExtraLessons] = useState([]);
+  const [showExtra, setShowExtra] = useState(false);
+  const [sbMaterials, setSbMaterials] = useState([]);
   const [dailyMsg] = useState(()=>MESSAGES[Math.floor(Math.random()*MESSAGES.length)]);
   const [vocabFlip, setVocabFlip] = useState({});
   const [vocabSearch, setVocabSearch] = useState("");
@@ -561,13 +564,18 @@ export default function App() {
         pdfs:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
         wordBank:{A1:[],A2:[],B1:[],B2:[],C1:[],C2:[]},
       };
-      // get homework for this student
+      // get homework for this student (match by id, with name fallback for safety)
       const allHw = appData.homework||[];
-      const myHw = allHw.filter(h=>h.studentId===found.id);
+      const myHw = allHw.filter(h=>h.studentId===found.id || (h.studentName&&h.studentName.toLowerCase()===found.name?.toLowerCase()));
       setSbHomework(myHw);
       const allLessons = appData.lessons||[];
-      const myLessons = allLessons.filter(l=>l.studentId===found.id);
+      const myLessons = allLessons.filter(l=>l.studentId===found.id || (l.studentName&&l.studentName.toLowerCase()===found.name?.toLowerCase()));
       setSbLessons(myLessons);
+      const generalLessons = allLessons.filter(l=>!l.studentId);
+      setExtraLessons(generalLessons);
+      const allMaterials = appData.portalMaterials||[];
+      const myMaterials = allMaterials.filter(m=>!m.studentId || m.studentId===found.id);
+      setSbMaterials(myMaterials);
       setStudent(st);setLevel(lvl);setLoggedIn(true);
     } catch(e){setErr("Erro de conexão. Tente novamente.");}
     setLoading(false);
@@ -834,8 +842,12 @@ export default function App() {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
                   </div>
                 )}
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10}}>
-                  {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].map((l,i)=>{
+
+                <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10}}>📚 Suas aulas</div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10,marginBottom:22}}>
+                  {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].length===0
+                    ? <div style={{gridColumn:"1/-1",textAlign:"center",padding:"24px 12px",color:T.t3,fontSize:12,fontWeight:500}}>Nenhuma aula atribuída ainda neste nível. ♡</div>
+                    : [...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].map((l,i)=>{
                     const id=`${level}-${i}`;const soon=!l.url;
                     return(
                       <div key={i} className="hov lesson-card-hover" onClick={()=>!soon&&setVideo(l.url)} style={{
@@ -878,26 +890,92 @@ export default function App() {
                     );
                   })}
                 </div>
+
+                {/* BOTÃO AULAS EXTRAS */}
+                {extraLessons.length>0 && (
+                  <>
+                    <button onClick={()=>setShowExtra(v=>!v)} style={{
+                      width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:10,
+                      padding:"16px",borderRadius:14,marginBottom:showExtra?16:0,border:"none",cursor:"pointer",
+                      background:`linear-gradient(135deg,${CF},#5B8FD9)`,
+                      boxShadow:`0 4px 18px ${CF}50`,
+                    }}>
+                      <span style={{fontSize:20}}>🎁</span>
+                      <div style={{textAlign:"center"}}>
+                        <div style={{fontSize:14,fontWeight:700,color:"#fff",letterSpacing:0.3}}>Aulas Extras ({extraLessons.length})</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.85)",marginTop:1}}>Conteúdo bônus disponível pra todo mundo</div>
+                      </div>
+                      <span style={{fontSize:14,color:"rgba(255,255,255,0.85)",transform:showExtra?"rotate(180deg)":"none",transition:"transform 0.2s"}}>▾</span>
+                    </button>
+
+                    {showExtra && (
+                      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10}}>
+                        {extraLessons.map((l,i)=>{
+                          const id=`extra-${i}`;
+                          return(
+                            <div key={i} className="hov lesson-card-hover" onClick={()=>setVideo(l.youtubeLink)} style={{
+                              borderRadius:12,overflow:"hidden",cursor:"pointer",
+                              background:T.card,border:`1.5px solid ${CF}50`,boxShadow:T.sh,
+                            }}>
+                              <div className="lesson-cover-hover" style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
+                                <span style={{position:"absolute",top:6,left:6,background:CF,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>🎁 {l.level}</span>
+                                <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
+                                  <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)"}}>
+                                    <span style={{fontSize:12,color:CF,marginLeft:2}}>▶</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div style={{padding:"8px 10px 10px"}}>
+                                <div style={{fontSize:12,fontWeight:700,color:T.t1,marginBottom:2,lineHeight:1.3}}>{l.title}</div>
+                                <div style={{fontSize:10.5,color:T.t3,fontWeight:500}}>{l.description}</div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             )}
 
             {/* TAREFAS */}
             {tab==="tasks"&&(
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                {/* Deveres do Supabase (central de operações) */}
-                {sbHomework.length>0&&(
-                  <div style={{marginBottom:8}}>
-                    <p style={{fontSize:11,fontWeight:700,color:SG,textTransform:"uppercase",letterSpacing:1.2,margin:"0 0 8px",padding:"0 4px"}}>✏️ Deveres da Teacher</p>
+                {sbHomework.length>0?(
+                  <div>
+                    <p style={{fontSize:11,fontWeight:700,color:SG,textTransform:"uppercase",letterSpacing:1.2,margin:"0 0 10px",padding:"0 4px"}}>✏️ Deveres da Teacher Angel</p>
                     {sbHomework.map((t,i)=>{
-                      const id=`sb-${i}`;const isDone=taskDone[id]??t.done??t.status==="concluido";
-                      const material = t.materialUrl || t.material_url || t.fileUrl || t.file_url || null;
+                      const id=`sb-${i}`;
+                      const isDone=taskDone[id]??(t.status==="concluído"||t.status==="concluido");
                       return(
                         <div key={id} className="hov" style={{
                           padding:"16px 18px",borderRadius:14,background:T.card,
-                          border:`1.5px solid ${isL?CF+"40":T.line}`,opacity:isDone?0.6:1,boxShadow:T.sh,marginBottom:8,
+                          border:`1.5px solid ${isDone?"#16a34a40":isL?CF+"40":T.line}`,
+                          opacity:isDone?0.7:1,boxShadow:T.sh,marginBottom:8,
                         }}>
                           <div style={{display:"flex",gap:12}}>
-                            <button onClick={()=>setTaskDone(p=>({...p,[id]:!isDone}))} style={{
+                            <button onClick={async()=>{
+                              const newDone=!isDone;
+                              setTaskDone(p=>({...p,[id]:newDone}));
+                              // Save status back to Supabase
+                              try {
+                                const appData = await fetchAppState();
+                                if(appData){
+                                  const hw = appData.homework||[];
+                                  const idx = hw.findIndex(h=>h.id===t.id);
+                                  if(idx>=0){
+                                    hw[idx].status = newDone?"concluído":"pendente";
+                                    appData.homework = hw;
+                                    await fetch(`${SUPABASE_URL}/rest/v1/app_state`,{
+                                      method:"PATCH",
+                                      headers:{"apikey":SUPABASE_KEY,"Authorization":`Bearer ${SUPABASE_KEY}`,"Content-Type":"application/json","Prefer":"return=minimal"},
+                                      body:JSON.stringify({data:appData})
+                                    });
+                                  }
+                                }
+                              } catch(e){ console.log("Erro ao salvar status",e); }
+                            }} style={{
                               width:26,height:26,borderRadius:8,flexShrink:0,cursor:"pointer",marginTop:1,
                               border:`2px solid ${isDone?"#16a34a":isL?CF:T.lh}`,
                               background:isDone?"#16a34a18":"transparent",
@@ -905,9 +983,9 @@ export default function App() {
                               display:"flex",alignItems:"center",justifyContent:"center",
                             }}>✓</button>
                             <div style={{flex:1}}>
-                              <div style={{fontSize:14,fontWeight:600,color:T.t1,marginBottom:4,textDecoration:isDone?"line-through":"none"}}>{t.description||t.title||t.descricao}</div>
+                              <div style={{fontSize:14,fontWeight:600,color:T.t1,marginBottom:4,textDecoration:isDone?"line-through":"none"}}>{t.description||t.title}</div>
                               <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
-                                <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:isDone?"#16a34a15":SG+"12",color:isDone?"#16a34a":SG}}>{isDone?"Concluída ✓":`Prazo: ${t.dueDate||t.due||"—"}`}</span>
+                                <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:isDone?"#16a34a15":SG+"12",color:isDone?"#16a34a":SG}}>{isDone?"Concluída ✓":`Prazo: ${t.dueDate||"—"}`}</span>
                                 {t.link&&<a href={t.link} target="_blank" rel="noopener noreferrer" style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:"#3b82f615",color:"#3b82f6",textDecoration:"none"}}>📎 {t.linkType||"Material"}</a>}
                               </div>
                             </div>
@@ -916,36 +994,9 @@ export default function App() {
                       );
                     })}
                   </div>
+                ):(
+                  <p style={{textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhuma tarefa atribuída ainda ♡</p>
                 )}
-
-                {/* Deveres estáticos do código */}
-                {(s.tasks[level]||[]).length===0&&sbHomework.length===0
-                  ?<p style={{textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhuma tarefa neste nível ♡</p>
-                  :(s.tasks[level]||[]).map((t,i)=>{
-                    const id=`t-${level}-${i}`;const isDone=taskDone[id]??t.done;
-                    return(
-                      <div key={i} className="hov" style={{
-                        padding:"16px 18px",borderRadius:14,background:T.card,
-                        border:`1.5px solid ${isL?CF+"30":T.line}`,opacity:isDone?0.5:1,boxShadow:T.sh,
-                      }}>
-                        <div style={{display:"flex",gap:12}}>
-                          <button onClick={()=>setTaskDone(p=>({...p,[id]:!isDone}))} style={{
-                            width:26,height:26,borderRadius:8,flexShrink:0,cursor:"pointer",marginTop:1,
-                            border:`2px solid ${isDone?"#16a34a":isL?CF:T.lh}`,
-                            background:isDone?"#16a34a18":"transparent",
-                            color:isDone?"#16a34a":"transparent",fontSize:13,
-                            display:"flex",alignItems:"center",justifyContent:"center",
-                          }}>✓</button>
-                          <div>
-                            <div style={{fontSize:14,fontWeight:600,color:T.t1,marginBottom:4,textDecoration:isDone?"line-through":"none"}}>{t.title}</div>
-                            <div style={{fontSize:12,color:T.t2,lineHeight:1.5,marginBottom:6,fontWeight:500}}>{t.details}</div>
-                            <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:6,background:isDone?"#16a34a15":SG+"12",color:isDone?"#16a34a":SG}}>{isDone?"Concluída ✓":`Prazo: ${t.due}`}</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                }
               </div>
             )}
 
@@ -957,19 +1008,24 @@ export default function App() {
             {/* MATERIAIS */}
             {tab==="pdfs"&&(
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:10}}>
-                {(s.pdfs[level]||[]).length===0
-                  ?<p style={{gridColumn:"1/-1",textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhum material.</p>
-                  :(s.pdfs[level]||[]).map((p,i)=>(
-                    <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" className="hov" style={{
-                      padding:"20px 16px",borderRadius:14,textDecoration:"none",
-                      background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,
-                      boxShadow:T.sh,display:"block",
-                    }}>
-                      <div style={{width:38,height:38,borderRadius:10,background:`linear-gradient(135deg,${SG}15,${CF}15)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,marginBottom:10}}>📄</div>
-                      <div style={{fontSize:12,fontWeight:600,color:T.t1,marginBottom:4}}>{p.title}</div>
-                      <div style={{fontSize:10,color:T.t3,fontWeight:500}}>Abrir ↗</div>
-                    </a>
-                  ))
+                {sbMaterials.length===0
+                  ?<p style={{gridColumn:"1/-1",textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhum material ainda. ♡</p>
+                  :sbMaterials.map((m,i)=>{
+                    const kind = (m.kind||"link").toLowerCase();
+                    const iconMap = {pdf:"📄",image:"🖼️",audio:"🎧",video:"🎬",youtube:"▶️",link:"🔗"};
+                    const icon = iconMap[kind]||"🔗";
+                    return (
+                      <a key={i} href={m.url} target="_blank" rel="noopener noreferrer" className="hov" style={{
+                        padding:"20px 16px",borderRadius:14,textDecoration:"none",
+                        background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,
+                        boxShadow:T.sh,display:"block",
+                      }}>
+                        <div style={{width:38,height:38,borderRadius:10,background:`linear-gradient(135deg,${SG}15,${CF}15)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,marginBottom:10}}>{icon}</div>
+                        <div style={{fontSize:12,fontWeight:600,color:T.t1,marginBottom:4}}>{m.title}</div>
+                        <div style={{fontSize:10,color:T.t3,fontWeight:500}}>Abrir ↗</div>
+                      </a>
+                    );
+                  })
                 }
               </div>
             )}
