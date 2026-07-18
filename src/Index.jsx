@@ -532,6 +532,7 @@ export default function App() {
   const [sbMaterials, setSbMaterials] = useState([]);
   const [dailyMsg] = useState(()=>MESSAGES[Math.floor(Math.random()*MESSAGES.length)]);
   const [appTip] = useState(()=>APP_TIPS[Math.floor(Math.random()*APP_TIPS.length)]);
+  const [extraCat, setExtraCat] = useState(null);
   const [vocabFlip, setVocabFlip] = useState({});
   const [vocabSearch, setVocabSearch] = useState("");
 
@@ -970,7 +971,6 @@ export default function App() {
                   };
                   const allCats = ["Música","Literatura","Filmes & Séries","Taylor Swift"];
                   const levelOrder = ["Básico","Intermediário","Avançado"];
-                  const [extraCat, setExtraCat] = React.useState(null);
 
                   return (
                     <div style={{marginTop:8}}>
