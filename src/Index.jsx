@@ -958,59 +958,103 @@ export default function App() {
                     <button onClick={()=>setShowExtra(v=>!v)} style={{
                       width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:10,
                       padding:"16px",borderRadius:14,marginBottom:showExtra?16:0,border:"none",cursor:"pointer",
-                      background:`linear-gradient(135deg,${CF},#5B8FD9)`,
-                      boxShadow:`0 4px 18px ${CF}50`,
+                      background:`linear-gradient(135deg,${SG},#72251F)`,
+                      boxShadow:`0 4px 18px ${SG}50`,
                     }}>
                       <span style={{fontSize:20}}>🎁</span>
                       <div style={{textAlign:"center"}}>
                         <div style={{fontSize:14,fontWeight:700,color:"#fff",letterSpacing:0.3}}>Aulas Extras ({extraLessons.length})</div>
-                        <div style={{fontSize:11,color:"rgba(255,255,255,0.85)",marginTop:1}}>Música, Literatura, Filmes e mais!</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.85)",marginTop:1}}>Música, Literatura, Filmes & Séries e mais!</div>
                       </div>
                       <span style={{fontSize:14,color:"rgba(255,255,255,0.85)",transform:showExtra?"rotate(180deg)":"none",transition:"transform 0.2s"}}>▾</span>
                     </button>
 
                     {showExtra && (()=>{
-                      const catIcons = {"Música":"🎵","Literatura":"📖","Clube do Livro":"📚","Filmes & Séries":"🎬","Curiosidades":"💡","Cultura":"🌍","Jogos & Atividades":"🎮","Outro":"🎁"};
-                      const categories = [...new Set(extraLessons.map(l=>l.extraCategory||"Outro"))];
-                      const sorted = [...extraLessons].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+                      const catConfig = {
+                        "Música":{icon:"🎵",color:"#8090A8"},
+                        "Literatura":{icon:"📖",color:"#72251F"},
+                        "Filmes & Séries":{icon:"🎬",color:"#192B51"},
+                        "Taylor Swift":{icon:"✨",color:"#C6A87D"},
+                      };
+                      const levelOrder = ["Básico","Intermediário","Avançado"];
+                      const categories = [...new Set(extraLessons.map(l=>l.extraCategory||"Música"))];
+                      const sorted = [...extraLessons].sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+
                       return (
                         <div>
+                          {/* INFO CARD */}
+                          <div style={{
+                            padding:"16px 20px",borderRadius:14,marginBottom:20,
+                            background:isL?`linear-gradient(135deg,${CL},#FFF0D8)`:`${T.card}`,
+                            border:`1.5px solid ${isL?SG+"30":T.line}`,
+                          }}>
+                            <div style={{fontSize:13,fontWeight:700,color:isL?SG:T.sgText,marginBottom:6}}>🌟 Amplie sua jornada!</div>
+                            <div style={{fontSize:12,color:T.t2,lineHeight:1.6,fontWeight:500}}>
+                              Aqui estão aulas especiais para expandir seu inglês além da sala de aula. 
+                              Elas estão organizadas por tema e nível — explore de acordo com sua curiosidade! 
+                              Todas as aulas estão disponíveis pra você, do básico ao avançado. 💛
+                            </div>
+                          </div>
+
+                          {/* CATEGORIES */}
                           {categories.map((cat,ci)=>{
-                            const catLessons = sorted.filter(l=>(l.extraCategory||"Outro")===cat);
+                            const conf = catConfig[cat]||{icon:"🎁",color:CF};
+                            const catLessons = sorted.filter(l=>(l.extraCategory||"Música")===cat);
                             if(catLessons.length===0) return null;
+                            const levels = levelOrder.filter(lv=>catLessons.some(l=>(l.extraLevel||"Básico")===lv));
+
                             return (
-                              <div key={ci} style={{marginBottom:18}}>
-                                <div style={{fontSize:12,fontWeight:700,color:isL?SG:T.sgText,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10,display:"flex",alignItems:"center",gap:6}}>
-                                  <span style={{fontSize:16}}>{catIcons[cat]||"🎁"}</span> {cat} ({catLessons.length})
+                              <div key={ci} style={{marginBottom:24}}>
+                                {/* Category header */}
+                                <div style={{
+                                  display:"flex",alignItems:"center",gap:10,marginBottom:14,
+                                  padding:"10px 14px",borderRadius:10,
+                                  background:conf.color+"15",borderLeft:`4px solid ${conf.color}`,
+                                }}>
+                                  <span style={{fontSize:22}}>{conf.icon}</span>
+                                  <div>
+                                    <div style={{fontSize:14,fontWeight:700,color:conf.color}}>{cat}</div>
+                                    <div style={{fontSize:11,color:T.t3,fontWeight:500}}>{catLessons.length} aula{catLessons.length>1?"s":""} disponíve{catLessons.length>1?"is":"l"}</div>
+                                  </div>
                                 </div>
-                                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10}}>
-                                  {catLessons.map((l,i)=>{
-                                    const id=`extra-${cat}-${i}`;
-                                    return(
-                                      <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{
-                                        borderRadius:12,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",
-                                        background:T.card,border:`1.5px solid ${CF}50`,boxShadow:T.sh,
-                                        opacity:l.youtubeLink?1:0.5,
-                                      }}>
-                                        <div className="lesson-cover-hover" style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
-                                          <span style={{position:"absolute",top:6,left:6,background:CF,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{catIcons[cat]||"🎁"} {l.level}</span>
-                                          {l.youtubeLink&&(
-                                            <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
-                                              <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)"}}>
-                                                <span style={{fontSize:12,color:CF,marginLeft:2}}>▶</span>
-                                              </div>
-                                            </div>
-                                          )}
-                                        </div>
-                                        <div style={{padding:"8px 10px 10px"}}>
-                                          <div style={{fontSize:12,fontWeight:700,color:T.t1,marginBottom:2,lineHeight:1.3}}>{l.title}</div>
-                                          <div style={{fontSize:10.5,color:T.t3,fontWeight:500}}>{l.description}</div>
-                                          {l.date&&<div style={{fontSize:9,color:T.t3,marginTop:4,fontWeight:600}}>📅 {l.date}</div>}
-                                        </div>
+
+                                {/* Levels within category */}
+                                {levels.map((lv,li)=>{
+                                  const lvLessons = catLessons.filter(l=>(l.extraLevel||"Básico")===lv);
+                                  const lvBadge = lv==="Básico"?"🌱":lv==="Intermediário"?"🌿":"🌳";
+                                  return (
+                                    <div key={li} style={{marginBottom:14}}>
+                                      <div style={{fontSize:11,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1,marginBottom:8,paddingLeft:4}}>
+                                        {lvBadge} {lv}
                                       </div>
-                                    );
-                                  })}
-                                </div>
+                                      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:10}}>
+                                        {lvLessons.map((l,i)=>(
+                                          <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{
+                                            borderRadius:12,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",
+                                            background:T.card,border:`1.5px solid ${conf.color}30`,boxShadow:T.sh,
+                                            opacity:l.youtubeLink?1:0.5,
+                                          }}>
+                                            <div className="lesson-cover-hover" style={{height:65,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:`linear-gradient(135deg,${conf.color}40,${conf.color}15)`,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                                              <span style={{position:"absolute",top:5,left:5,background:conf.color,color:"#fff",fontSize:8.5,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{conf.icon} {lv}</span>
+                                              {l.youtubeLink&&(
+                                                <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
+                                                  <div style={{width:28,height:28,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                                                    <span style={{fontSize:11,color:conf.color,marginLeft:2}}>▶</span>
+                                                  </div>
+                                                </div>
+                                              )}
+                                            </div>
+                                            <div style={{padding:"7px 10px 9px"}}>
+                                              <div style={{fontSize:11.5,fontWeight:700,color:T.t1,lineHeight:1.3}}>{l.title}</div>
+                                              {l.description&&<div style={{fontSize:10,color:T.t3,fontWeight:500,marginTop:2}}>{l.description}</div>}
+                                              {l.date&&<div style={{fontSize:9,color:T.t3,marginTop:3,fontWeight:600}}>📅 {l.date}</div>}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             );
                           })}
