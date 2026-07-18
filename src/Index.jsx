@@ -176,7 +176,21 @@ const MESSAGES = [
   "I believe in you more than you know! Continue brilhando! ⭐",
 ];
 
-// ── VOCABULARY BY LEVEL ──
+// ── APP TIPS (rotate randomly) ──
+const APP_TIPS = [
+  {icon:"🔊", text:"Sabia que você pode ouvir a pronúncia de cada palavra? Vá em Vocabulário e clique no ícone de som!", tab:"words"},
+  {icon:"📄", text:"A Teacher Angel enviou materiais pra você! Confira na aba Materiais.", tab:"pdfs"},
+  {icon:"💬", text:"Tem dúvida ou sugestão? Mande uma mensagem pelo WhatsApp! A Teacher adora ouvir você.", tab:null},
+  {icon:"🎵", text:"Aprender inglês com música é incrível! Confira as atividades na aba Música.", tab:"music"},
+  {icon:"📚", text:"Na aba Recursos tem dicionários, jogos e podcasts pra turbinar seu inglês!", tab:"resources"},
+  {icon:"✏️", text:"Não esquece de conferir suas tarefas! A Teacher pode ter enviado algo novo.", tab:"tasks"},
+  {icon:"🏆", text:"Acompanhe seu progresso na aba Progresso e veja o quanto já evoluiu!", tab:"progress"},
+  {icon:"🌐", text:"Use o Cambridge Dictionary pra ver definições, exemplos e pronúncia — tudo em inglês!", tab:"resources"},
+  {icon:"📅", text:"Quer agendar sua próxima aula? Use o botão de agendamento aqui em cima!", tab:null},
+  {icon:"🎧", text:"Tente ouvir podcasts em inglês! Na aba Recursos tem BBC e TED Talks.", tab:"resources"},
+  {icon:"💡", text:"Dica: tente ler as instruções das tarefas em voz alta — pratica reading e speaking!", tab:"tasks"},
+  {icon:"🦋", text:"Cada palavra nova é uma vitória! Quantas você já aprendeu hoje?", tab:"words"},
+];
 const VOCAB = {
   A1: [
     {en:"hello",pt:"olá",audio:"hello"},{en:"goodbye",pt:"tchau",audio:"goodbye"},{en:"please",pt:"por favor",audio:"please"},{en:"thank you",pt:"obrigada",audio:"thank+you"},{en:"yes",pt:"sim",audio:"yes"},{en:"no",pt:"não",audio:"no"},{en:"sorry",pt:"desculpe",audio:"sorry"},{en:"help",pt:"ajuda",audio:"help"},{en:"water",pt:"água",audio:"water"},{en:"food",pt:"comida",audio:"food"},
@@ -515,6 +529,7 @@ export default function App() {
   const [showExtra, setShowExtra] = useState(false);
   const [sbMaterials, setSbMaterials] = useState([]);
   const [dailyMsg] = useState(()=>MESSAGES[Math.floor(Math.random()*MESSAGES.length)]);
+  const [appTip] = useState(()=>APP_TIPS[Math.floor(Math.random()*APP_TIPS.length)]);
   const [vocabFlip, setVocabFlip] = useState({});
   const [vocabSearch, setVocabSearch] = useState("");
 
@@ -565,7 +580,7 @@ export default function App() {
       const allLessons = appData.lessons||[];
       const myLessons = allLessons.filter(l=>l.studentId===found.id || (l.studentName&&l.studentName.toLowerCase()===found.name?.toLowerCase()));
       setSbLessons(myLessons);
-      const generalLessons = allLessons.filter(l=>!l.studentId);
+      const generalLessons = allLessons.filter(l=>l.isExtra===true);
       setExtraLessons(generalLessons);
       const allMaterials = appData.portalMaterials||[];
       const myMaterials = allMaterials.filter(m=>!m.studentId || m.studentId===found.id);
@@ -808,6 +823,56 @@ export default function App() {
                 <div style={{fontSize:26,fontWeight:700,fontFamily:Fd,color:st.col}}>{st.value}</div>
               </div>
             ))}
+          </div>
+
+          {/* ACTION CARDS */}
+          {(()=>{
+            const pendingHw = sbHomework.filter(h=>h.status!=='concluído').length;
+            const newMaterials = sbMaterials.length;
+            const myLessonsCount = sbLessons.filter(l=>l.level===level).length + (s.lessons[level]||[]).length;
+            const actions = [];
+            if(pendingHw>0) actions.push({icon:"✏️",label:`${pendingHw} tarefa${pendingHw>1?'s':''} pendente${pendingHw>1?'s':''}`,sub:"Confira e marque como feita!",color:SG,tab:"tasks"});
+            if(newMaterials>0) actions.push({icon:"📄",label:`${newMaterials} material${newMaterials>1?'is':''} disponíve${newMaterials>1?'is':'l'}`,sub:"A Teacher enviou conteúdo pra você!",color:"#2563eb",tab:"pdfs"});
+            if(myLessonsCount>0) actions.push({icon:"📚",label:`${myLessonsCount} aula${myLessonsCount>1?'s':''} no nível ${level}`,sub:"Continue de onde parou!",color:"#16a34a",tab:"lessons"});
+            if(extraLessons.length>0) actions.push({icon:"🎁",label:`${extraLessons.length} aula${extraLessons.length>1?'s':''} extra${extraLessons.length>1?'s':''}`,sub:"Música, curiosidades e mais!",color:CF,tab:"lessons"});
+            return actions.length>0 ? (
+              <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(actions.length,3)},1fr)`,gap:10,marginBottom:18}}>
+                {actions.slice(0,3).map((a,i)=>(
+                  <div key={i} onClick={()=>setTab(a.tab)} style={{
+                    padding:"14px 16px",borderRadius:14,cursor:"pointer",
+                    background:T.card,border:`1.5px solid ${a.color}25`,
+                    boxShadow:T.sh,display:"flex",alignItems:"center",gap:12,
+                    transition:"transform 0.15s",
+                  }}
+                  onMouseOver={e=>e.currentTarget.style.transform="translateY(-2px)"}
+                  onMouseOut={e=>e.currentTarget.style.transform="none"}
+                  >
+                    <span style={{fontSize:24,flexShrink:0}}>{a.icon}</span>
+                    <div>
+                      <div style={{fontSize:13,fontWeight:700,color:a.color}}>{a.label}</div>
+                      <div style={{fontSize:11,color:T.t3,marginTop:2,fontWeight:500}}>{a.sub}</div>
+                    </div>
+                    <span style={{marginLeft:"auto",fontSize:14,color:T.t3}}>→</span>
+                  </div>
+                ))}
+              </div>
+            ) : null;
+          })()}
+
+          {/* APP TIP */}
+          <div onClick={()=>appTip.tab&&setTab(appTip.tab)} style={{
+            padding:"12px 16px",borderRadius:12,marginBottom:20,
+            background:isL?`linear-gradient(135deg,${CL},#FFF0D8)`:`${T.card}`,
+            border:`1.5px solid ${isL?CF+"40":T.line}`,
+            display:"flex",alignItems:"center",gap:12,
+            cursor:appTip.tab?"pointer":"default",
+          }}>
+            <span style={{fontSize:22,flexShrink:0}}>{appTip.icon}</span>
+            <div>
+              <div style={{fontSize:10,fontWeight:700,color:isL?SG:T.sgText,textTransform:"uppercase",letterSpacing:1,marginBottom:2}}>💡 Dica do app</div>
+              <div style={{fontSize:12.5,color:T.t2,lineHeight:1.5,fontWeight:500}}>{appTip.text}</div>
+            </div>
+            {appTip.tab&&<span style={{marginLeft:"auto",fontSize:11,color:CF,fontWeight:600}}>Ver →</span>}
           </div>
 
           {/* LEVEL BAR */}
