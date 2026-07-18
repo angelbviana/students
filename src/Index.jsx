@@ -142,6 +142,7 @@ const RESOURCES = [
   { name: "BBC Learning English", url: "https://www.bbc.co.uk/learningenglish", desc: "Cursos e podcasts gratuitos da BBC", cat: "listen" },
   { name: "News in Levels", url: "https://www.newsinlevels.com/", desc: "Notícias adaptadas para seu nível", cat: "listen" },
   { name: "TED Talks", url: "https://www.ted.com/talks", desc: "Palestras inspiradoras com legendas", cat: "listen" },
+  { name: "PlayPhrase.me", url: "https://www.playphrase.me/", desc: "Aprenda com cenas reais de filmes e séries — pesquise qualquer frase!", cat: "practice" },
 ];
 
 const LEVELS = ["A1","A2","B1","B2","C1","C2"];
@@ -188,6 +189,7 @@ const APP_TIPS = [
   {icon:"🌐", text:"Use o Cambridge Dictionary pra ver definições, exemplos e pronúncia — tudo em inglês!", tab:"resources"},
   {icon:"📅", text:"Quer agendar sua próxima aula? Use o botão de agendamento aqui em cima!", tab:null},
   {icon:"🎧", text:"Tente ouvir podcasts em inglês! Na aba Recursos tem BBC e TED Talks.", tab:"resources"},
+  {icon:"🎬", text:"Quer ouvir frases em cenas de filmes? Use o PlayPhrase.me nos Recursos — é incrível!", tab:"resources"},
   {icon:"💡", text:"Dica: tente ler as instruções das tarefas em voz alta — pratica reading e speaking!", tab:"tasks"},
   {icon:"🦋", text:"Cada palavra nova é uma vitória! Quantas você já aprendeu hoje?", tab:"words"},
 ];
@@ -657,7 +659,7 @@ export default function App() {
   const s = student;
   const unlocked = s.unlockedLevels.includes(level);
   const totalDone = Object.keys(done).filter(k=>done[k]).length;
-  const totalLessons = Object.values(s.lessons).flat().filter(l=>l.url).length;
+  const totalLessons = sbLessons.filter(l=>l.level===level).length + Object.values(s.lessons).flat().filter(l=>l.url).length;
   const pending = Object.values(s.tasks).flat().filter(t=>!t.done).length;
   const words = (s.wordBank[level]||[]).filter(w=>!search||w.en.toLowerCase().includes(search.toLowerCase())||w.pt.toLowerCase().includes(search.toLowerCase()));
   const tabs = [
@@ -950,7 +952,7 @@ export default function App() {
                   })}
                 </div>
 
-                {/* BOTÃO AULAS EXTRAS */}
+                {/* AULAS EXTRAS */}
                 {extraLessons.length>0 && (
                   <>
                     <button onClick={()=>setShowExtra(v=>!v)} style={{
@@ -962,37 +964,59 @@ export default function App() {
                       <span style={{fontSize:20}}>🎁</span>
                       <div style={{textAlign:"center"}}>
                         <div style={{fontSize:14,fontWeight:700,color:"#fff",letterSpacing:0.3}}>Aulas Extras ({extraLessons.length})</div>
-                        <div style={{fontSize:11,color:"rgba(255,255,255,0.85)",marginTop:1}}>Conteúdo bônus disponível pra todo mundo</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.85)",marginTop:1}}>Música, Literatura, Filmes e mais!</div>
                       </div>
                       <span style={{fontSize:14,color:"rgba(255,255,255,0.85)",transform:showExtra?"rotate(180deg)":"none",transition:"transform 0.2s"}}>▾</span>
                     </button>
 
-                    {showExtra && (
-                      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10}}>
-                        {extraLessons.map((l,i)=>{
-                          const id=`extra-${i}`;
-                          return(
-                            <div key={i} className="hov lesson-card-hover" onClick={()=>setVideo(l.youtubeLink)} style={{
-                              borderRadius:12,overflow:"hidden",cursor:"pointer",
-                              background:T.card,border:`1.5px solid ${CF}50`,boxShadow:T.sh,
-                            }}>
-                              <div className="lesson-cover-hover" style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
-                                <span style={{position:"absolute",top:6,left:6,background:CF,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>🎁 {l.level}</span>
-                                <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
-                                  <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)"}}>
-                                    <span style={{fontSize:12,color:CF,marginLeft:2}}>▶</span>
-                                  </div>
+                    {showExtra && (()=>{
+                      const catIcons = {"Música":"🎵","Literatura":"📖","Clube do Livro":"📚","Filmes & Séries":"🎬","Curiosidades":"💡","Cultura":"🌍","Jogos & Atividades":"🎮","Outro":"🎁"};
+                      const categories = [...new Set(extraLessons.map(l=>l.extraCategory||"Outro"))];
+                      const sorted = [...extraLessons].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+                      return (
+                        <div>
+                          {categories.map((cat,ci)=>{
+                            const catLessons = sorted.filter(l=>(l.extraCategory||"Outro")===cat);
+                            if(catLessons.length===0) return null;
+                            return (
+                              <div key={ci} style={{marginBottom:18}}>
+                                <div style={{fontSize:12,fontWeight:700,color:isL?SG:T.sgText,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10,display:"flex",alignItems:"center",gap:6}}>
+                                  <span style={{fontSize:16}}>{catIcons[cat]||"🎁"}</span> {cat} ({catLessons.length})
+                                </div>
+                                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10}}>
+                                  {catLessons.map((l,i)=>{
+                                    const id=`extra-${cat}-${i}`;
+                                    return(
+                                      <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{
+                                        borderRadius:12,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",
+                                        background:T.card,border:`1.5px solid ${CF}50`,boxShadow:T.sh,
+                                        opacity:l.youtubeLink?1:0.5,
+                                      }}>
+                                        <div className="lesson-cover-hover" style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
+                                          <span style={{position:"absolute",top:6,left:6,background:CF,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{catIcons[cat]||"🎁"} {l.level}</span>
+                                          {l.youtubeLink&&(
+                                            <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
+                                              <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)"}}>
+                                                <span style={{fontSize:12,color:CF,marginLeft:2}}>▶</span>
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                        <div style={{padding:"8px 10px 10px"}}>
+                                          <div style={{fontSize:12,fontWeight:700,color:T.t1,marginBottom:2,lineHeight:1.3}}>{l.title}</div>
+                                          <div style={{fontSize:10.5,color:T.t3,fontWeight:500}}>{l.description}</div>
+                                          {l.date&&<div style={{fontSize:9,color:T.t3,marginTop:4,fontWeight:600}}>📅 {l.date}</div>}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               </div>
-                              <div style={{padding:"8px 10px 10px"}}>
-                                <div style={{fontSize:12,fontWeight:700,color:T.t1,marginBottom:2,lineHeight:1.3}}>{l.title}</div>
-                                <div style={{fontSize:10.5,color:T.t3,fontWeight:500}}>{l.description}</div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
                   </>
                 )}
               </div>
