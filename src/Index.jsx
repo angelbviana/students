@@ -665,6 +665,7 @@ export default function App() {
   const words = (s.wordBank[level]||[]).filter(w=>!search||w.en.toLowerCase().includes(search.toLowerCase())||w.pt.toLowerCase().includes(search.toLowerCase()));
   const tabs = [
     {id:"lessons",label:"Aulas",badge:null,icon:"📚"},
+    {id:"extras",label:"Aulas Extras",badge:extraLessons.length||null,icon:"🎁"},
     {id:"tasks",label:"Tarefas",badge:pending||null,icon:"✏️"},
     {id:"music",label:"Música",badge:null,icon:"🎵"},
     {id:"pdfs",label:"Materiais",badge:null,icon:"📄"},
@@ -951,170 +952,104 @@ export default function App() {
                       </div>
                     );
                   })}
-                </div>
-
-                {/* AULAS EXTRAS */}
-                {(extraLessons.length>0 || true) && (()=>{
-                  const catConfig = {
-                    "Música":{icon:"🎵",color:"#8090A8",dark:"#192B51",
-                      bg:`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><defs><pattern id='w' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M0 20 Q10 0 20 20 Q30 40 40 20' fill='none' stroke='rgba(255,255,255,0.12)' stroke-width='2'/></pattern></defs><rect width='200' height='200' fill='url(%23w)'/></svg>`)}")`,
-                      sub:"Aprenda inglês cantando suas músicas favoritas"},
-                    "Literatura":{icon:"📖",color:"#72251F",dark:"#3D0F1C",
-                      bg:`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><defs><pattern id='d' width='40' height='70' patternUnits='userSpaceOnUse'><polygon points='20,0 40,35 20,70 0,35' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='1.5'/></pattern></defs><rect width='200' height='200' fill='url(%23d)'/></svg>`)}")`,
-                      sub:"Explore histórias incríveis em inglês"},
-                    "Filmes & Séries":{icon:"🎬",color:"#192B51",dark:"#0D1A33",
-                      bg:`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><defs><pattern id='c' width='60' height='200' patternUnits='userSpaceOnUse'><rect x='0' y='0' width='4' height='200' fill='rgba(255,255,255,0.06)'/><rect x='15' y='0' width='6' height='200' fill='rgba(255,255,255,0.04)'/><rect x='35' y='0' width='3' height='200' fill='rgba(255,255,255,0.07)'/><rect x='50' y='0' width='5' height='200' fill='rgba(255,255,255,0.03)'/></pattern></defs><rect width='200' height='200' fill='url(%23c)'/></svg>`)}")`,
-                      sub:"Aprenda com cenas de filmes e séries"},
-                    "Taylor Swift":{icon:"✨",color:"#771C31",dark:"#3D0F1C",
-                      bg:`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><defs><pattern id='s' width='50' height='50' patternUnits='userSpaceOnUse'><polygon points='25,5 30,20 45,20 33,30 37,45 25,36 13,45 17,30 5,20 20,20' fill='rgba(255,255,255,0.08)' stroke='rgba(255,255,255,0.05)'/></pattern></defs><rect width='200' height='200' fill='url(%23s)'/></svg>`)}")`,
-                      sub:"Minicurso especial — cante e aprenda com a Taylor"},
-                  };
-                  const allCats = ["Música","Literatura","Filmes & Séries","Taylor Swift"];
-                  const levelOrder = ["Básico","Intermediário","Avançado"];
-
-                  return (
-                    <div style={{marginTop:8}}>
-                      {/* DIVIDER */}
-                      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-                        <div style={{flex:1,height:1,background:T.line}}/>
-                        <span style={{fontSize:13,fontWeight:700,color:isL?SG:T.sgText,letterSpacing:1,textTransform:"uppercase"}}>🎁 Aulas Extras</span>
-                        <div style={{flex:1,height:1,background:T.line}}/>
-                      </div>
-
-                      {/* INFO */}
-                      <div style={{
-                        padding:"14px 18px",borderRadius:14,marginBottom:16,
-                        background:isL?`linear-gradient(135deg,${CL},#FFF0D8)`:`${T.card}`,
-                        border:`1.5px solid ${isL?SG+"20":T.line}`,textAlign:"center",
-                      }}>
-                        <div style={{fontSize:12,color:T.t2,lineHeight:1.6,fontWeight:500}}>
-                          Aulas especiais pra expandir seu inglês além da sala de aula. Explore por tema e nível! 💛
-                        </div>
-                      </div>
-
-                      {!extraCat ? (
-                        /* CATEGORY BANNERS */
-                        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:12}}>
-                          {allCats.map((cat,i)=>{
-                            const conf = catConfig[cat];
-                            const count = extraLessons.filter(l=>(l.extraCategory||"Música")===cat).length;
-                            return (
-                              <div key={i} onClick={()=>count>0&&setExtraCat(cat)}
-                                className="hov"
-                                style={{
-                                  borderRadius:16,overflow:"hidden",cursor:count>0?"pointer":"default",
-                                  background:`linear-gradient(145deg,${conf.color},${conf.dark})`,
-                                  backgroundImage:`linear-gradient(145deg,${conf.color},${conf.dark})`,
-                                  position:"relative",minHeight:180,display:"flex",flexDirection:"column",
-                                  justifyContent:"flex-end",padding:"16px 14px",
-                                  boxShadow:`0 6px 24px ${conf.color}40`,
-                                  opacity:count>0?1:0.45,
-                                  transition:"transform 0.2s,box-shadow 0.2s",
-                                }}
-                                onMouseOver={e=>{if(count>0){e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 10px 32px ${conf.color}60`}}}
-                                onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow=`0 6px 24px ${conf.color}40`}}
-                              >
-                                {/* SVG pattern overlay */}
-                                <div style={{position:"absolute",inset:0,backgroundImage:conf.bg,backgroundSize:"200px 200px",opacity:1,borderRadius:16}}/>
-                                {/* Content */}
-                                <div style={{position:"relative",zIndex:2}}>
-                                  <div style={{fontSize:36,marginBottom:8,filter:"drop-shadow(0 2px 4px rgba(0,0,0,0.3))"}}>
-                                    {conf.icon}
-                                  </div>
-                                  <div style={{fontSize:16,fontWeight:800,color:"#fff",letterSpacing:0.5,lineHeight:1.2,textShadow:"0 2px 8px rgba(0,0,0,0.3)"}}>
-                                    {cat}
-                                  </div>
-                                  <div style={{fontSize:10.5,color:"rgba(255,255,255,0.75)",marginTop:4,fontWeight:500,lineHeight:1.4}}>
-                                    {conf.sub}
-                                  </div>
-                                  {count>0&&<div style={{marginTop:8,display:"inline-block",background:"rgba(255,255,255,0.2)",borderRadius:20,padding:"3px 10px",fontSize:10,fontWeight:700,color:"#fff"}}>
-                                    {count} aula{count>1?"s":""}
-                                  </div>}
-                                  {count===0&&<div style={{marginTop:8,fontSize:10,color:"rgba(255,255,255,0.5)",fontWeight:600,fontStyle:"italic"}}>
-                                    Em breve...
-                                  </div>}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      ) : (()=>{
-                        /* CATEGORY DETAIL VIEW */
-                        const conf = catConfig[extraCat]||catConfig["Música"];
-                        const catLessons = [...extraLessons.filter(l=>(l.extraCategory||"Música")===extraCat)].sort((a,b)=>(a.date||"").localeCompare(b.date||""));
-                        const levels = levelOrder.filter(lv=>catLessons.some(l=>(l.extraLevel||"Básico")===lv));
-
-                        return (
-                          <div>
-                            {/* Category banner header */}
-                            <div style={{
-                              borderRadius:16,overflow:"hidden",position:"relative",
-                              background:`linear-gradient(145deg,${conf.color},${conf.dark})`,
-                              padding:"20px 18px",marginBottom:16,
-                            }}>
-                              <div style={{position:"absolute",inset:0,backgroundImage:conf.bg,backgroundSize:"200px 200px"}}/>
-                              <div style={{position:"relative",zIndex:2,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                                <div style={{display:"flex",alignItems:"center",gap:12}}>
-                                  <span style={{fontSize:32}}>{conf.icon}</span>
-                                  <div>
-                                    <div style={{fontSize:18,fontWeight:800,color:"#fff",textShadow:"0 2px 8px rgba(0,0,0,0.3)"}}>{extraCat}</div>
-                                    <div style={{fontSize:11,color:"rgba(255,255,255,0.75)",fontWeight:500}}>{catLessons.length} aula{catLessons.length>1?"s":""} disponíve{catLessons.length>1?"is":"l"}</div>
-                                  </div>
-                                </div>
-                                <button onClick={()=>setExtraCat(null)} style={{
-                                  background:"rgba(255,255,255,0.2)",border:"none",borderRadius:8,
-                                  padding:"6px 12px",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:Fb,
-                                }}>← Voltar</button>
-                              </div>
-                            </div>
-
-                            {/* Lessons by level */}
-                            {levels.map((lv,li)=>{
-                              const lvLessons = catLessons.filter(l=>(l.extraLevel||"Básico")===lv);
-                              const lvBadge = lv==="Básico"?"🌱":lv==="Intermediário"?"🌿":"🌳";
-                              return (
-                                <div key={li} style={{marginBottom:18}}>
-                                  <div style={{fontSize:11,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1,marginBottom:8,paddingLeft:4}}>
-                                    {lvBadge} {lv}
-                                  </div>
-                                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:10}}>
-                                    {lvLessons.map((l,i)=>(
-                                      <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{
-                                        borderRadius:12,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",
-                                        background:T.card,border:`1.5px solid ${conf.color}30`,boxShadow:T.sh,
-                                        opacity:l.youtubeLink?1:0.5,
-                                      }}>
-                                        <div className="lesson-cover-hover" style={{height:65,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:`linear-gradient(135deg,${conf.color}40,${conf.color}15)`,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                                          <span style={{position:"absolute",top:5,left:5,background:conf.color,color:"#fff",fontSize:8.5,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{conf.icon} {lv}</span>
-                                          {l.youtubeLink&&(
-                                            <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
-                                              <div style={{width:28,height:28,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                                                <span style={{fontSize:11,color:conf.color,marginLeft:2}}>▶</span>
-                                              </div>
-                                            </div>
-                                          )}
-                                        </div>
-                                        <div style={{padding:"7px 10px 9px"}}>
-                                          <div style={{fontSize:11.5,fontWeight:700,color:T.t1,lineHeight:1.3}}>{l.title}</div>
-                                          {l.description&&<div style={{fontSize:10,color:T.t3,fontWeight:500,marginTop:2}}>{l.description}</div>}
-                                          {l.date&&<div style={{fontSize:9,color:T.t3,marginTop:3,fontWeight:600}}>📅 {l.date}</div>}
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  );
-                })()}
-              </div>
+                </div>              </div>
             )}
 
-            {/* TAREFAS */}
+            {/* EXTRAS TAB */}
+            {tab==="extras"&&(()=>{
+              const catConfig = {
+                "Música":{icon:"🎵",color:"#8090A8",dark:"#192B51",sub:"Aprenda inglês cantando suas músicas favoritas"},
+                "Literatura":{icon:"📖",color:"#72251F",dark:"#3D0F1C",sub:"Explore histórias incríveis em inglês"},
+                "Filmes & Séries":{icon:"🎬",color:"#192B51",dark:"#0D1A33",sub:"Aprenda com cenas de filmes e séries"},
+                "Taylor Swift":{icon:"✨",color:"#771C31",dark:"#3D0F1C",sub:"Minicurso especial — cante e aprenda com a Taylor"},
+              };
+              const allCats = ["Música","Literatura","Filmes & Séries","Taylor Swift"];
+              const levelOrder = ["Básico","Intermediário","Avançado"];
+              const diamondBg = "repeating-linear-gradient(60deg,rgba(147,176,210,0.06) 0px,rgba(147,176,210,0.06) 1px,transparent 1px,transparent 30px),repeating-linear-gradient(-60deg,rgba(147,176,210,0.06) 0px,rgba(147,176,210,0.06) 1px,transparent 1px,transparent 30px)";
+
+              return (
+                <div style={{minHeight:"60vh",padding:"0",borderRadius:16,backgroundImage:diamondBg}}>
+                  <div style={{textAlign:"center",marginBottom:20,padding:"8px 0"}}>
+                    <div style={{fontSize:11,fontWeight:700,color:isL?SG:T.sgText,textTransform:"uppercase",letterSpacing:1.5,marginBottom:6}}>🎁 Aulas Extras</div>
+                    <div style={{fontSize:12,color:T.t3,fontWeight:500,maxWidth:400,margin:"0 auto",lineHeight:1.5}}>Aulas especiais pra expandir seu inglês além da sala de aula. Explore por tema e nível! 💛</div>
+                  </div>
+                  {!extraCat ? (
+                    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(155px,1fr))",gap:12}}>
+                      {allCats.map((cat,i)=>{
+                        const conf = catConfig[cat];
+                        const count = extraLessons.filter(l=>(l.extraCategory||"Música")===cat).length;
+                        return (
+                          <div key={i} onClick={()=>count>0&&setExtraCat(cat)} className="hov" style={{
+                            borderRadius:16,overflow:"hidden",cursor:count>0?"pointer":"default",
+                            background:`linear-gradient(145deg,${conf.color},${conf.dark})`,
+                            position:"relative",minHeight:180,display:"flex",flexDirection:"column",
+                            justifyContent:"flex-end",padding:"16px 14px",
+                            boxShadow:`0 6px 24px ${conf.color}40`,opacity:count>0?1:0.45,
+                            transition:"transform 0.2s,box-shadow 0.2s",
+                          }}
+                          onMouseOver={e=>{if(count>0){e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 10px 32px ${conf.color}60`}}}
+                          onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow=`0 6px 24px ${conf.color}40`}}>
+                            <div style={{position:"relative",zIndex:2}}>
+                              <div style={{fontSize:36,marginBottom:8,filter:"drop-shadow(0 2px 4px rgba(0,0,0,0.3))"}}>{conf.icon}</div>
+                              <div style={{fontSize:16,fontWeight:800,color:"#fff",letterSpacing:0.5,lineHeight:1.2,textShadow:"0 2px 8px rgba(0,0,0,0.3)"}}>{cat}</div>
+                              <div style={{fontSize:10.5,color:"rgba(255,255,255,0.75)",marginTop:4,fontWeight:500,lineHeight:1.4}}>{conf.sub}</div>
+                              {count>0&&<div style={{marginTop:8,display:"inline-block",background:"rgba(255,255,255,0.2)",borderRadius:20,padding:"3px 10px",fontSize:10,fontWeight:700,color:"#fff"}}>{count} aula{count>1?"s":""}</div>}
+                              {count===0&&<div style={{marginTop:8,fontSize:10,color:"rgba(255,255,255,0.5)",fontWeight:600,fontStyle:"italic"}}>Em breve...</div>}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (()=>{
+                    const conf = catConfig[extraCat]||catConfig["Música"];
+                    const catLessons = [...extraLessons.filter(l=>(l.extraCategory||"Música")===extraCat)].sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+                    const levels = levelOrder.filter(lv=>catLessons.some(l=>(l.extraLevel||"Básico")===lv));
+                    return (
+                      <div>
+                        <div style={{borderRadius:16,overflow:"hidden",position:"relative",background:`linear-gradient(145deg,${conf.color},${conf.dark})`,padding:"20px 18px",marginBottom:16}}>
+                          <div style={{position:"relative",zIndex:2,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:12}}>
+                              <span style={{fontSize:32}}>{conf.icon}</span>
+                              <div>
+                                <div style={{fontSize:18,fontWeight:800,color:"#fff",textShadow:"0 2px 8px rgba(0,0,0,0.3)"}}>{extraCat}</div>
+                                <div style={{fontSize:11,color:"rgba(255,255,255,0.75)",fontWeight:500}}>{catLessons.length} aula{catLessons.length>1?"s":""}</div>
+                              </div>
+                            </div>
+                            <button onClick={()=>setExtraCat(null)} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:8,padding:"6px 12px",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:Fb}}>← Voltar</button>
+                          </div>
+                        </div>
+                        {levels.map((lv,li)=>{
+                          const lvLessons = catLessons.filter(l=>(l.extraLevel||"Básico")===lv);
+                          const lvBadge = lv==="Básico"?"🌱":lv==="Intermediário"?"🌿":"🌳";
+                          return (
+                            <div key={li} style={{marginBottom:18}}>
+                              <div style={{fontSize:11,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1,marginBottom:8,paddingLeft:4}}>{lvBadge} {lv}</div>
+                              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:10}}>
+                                {lvLessons.map((l,i)=>(
+                                  <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{borderRadius:12,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",background:T.card,border:`1.5px solid ${conf.color}30`,boxShadow:T.sh,opacity:l.youtubeLink?1:0.5}}>
+                                    <div className="lesson-cover-hover" style={{height:65,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:`linear-gradient(135deg,${conf.color}40,${conf.color}15)`}}>
+                                      <span style={{position:"absolute",top:5,left:5,background:conf.color,color:"#fff",fontSize:8.5,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{conf.icon} {lv}</span>
+                                      {l.youtubeLink&&<div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}><div style={{width:28,height:28,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontSize:11,color:conf.color,marginLeft:2}}>▶</span></div></div>}
+                                    </div>
+                                    <div style={{padding:"7px 10px 9px"}}>
+                                      <div style={{fontSize:11.5,fontWeight:700,color:T.t1,lineHeight:1.3}}>{l.title}</div>
+                                      {l.description&&<div style={{fontSize:10,color:T.t3,fontWeight:500,marginTop:2}}>{l.description}</div>}
+                                      {l.date&&<div style={{fontSize:9,color:T.t3,marginTop:3,fontWeight:600}}>📅 {l.date}</div>}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                </div>
+              );
+            })()}
+
+                        {/* TAREFAS */}
             {tab==="tasks"&&(
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {sbHomework.length>0?(
