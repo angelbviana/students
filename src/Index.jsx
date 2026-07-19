@@ -911,45 +911,45 @@ export default function App() {
                 )}
 
                 <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10}}>📚 Suas aulas</div>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(190px,1fr))",gap:10,marginBottom:22}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:16,marginBottom:22}}>
                   {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].length===0
                     ? <div style={{gridColumn:"1/-1",textAlign:"center",padding:"24px 12px",color:T.t3,fontSize:12,fontWeight:500}}>Nenhuma aula atribuída ainda neste nível. ♡</div>
                     : [...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].map((l,i)=>{
                     const id=`${level}-${i}`;const soon=!l.url;
                     return(
                       <div key={i} className="hov lesson-card-hover" onClick={()=>!soon&&setVideo(l.url)} style={{
-                        borderRadius:12,overflow:"hidden",cursor:soon?"default":"pointer",
+                        borderRadius:16,overflow:"hidden",cursor:soon?"default":"pointer",
                         background:T.card,border:`1.5px solid ${isL?CF+"40":T.line}`,
                         opacity:soon?0.4:1,boxShadow:T.sh,
                       }}>
-                        <div className="lesson-cover-hover" style={{height:70,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
-                          <span style={{position:"absolute",top:6,left:6,background:SG,color:"#fff",fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{level}</span>
-                          {l.dur&&<span style={{position:"absolute",bottom:6,right:6,background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:9,padding:"2px 6px",borderRadius:5,zIndex:2}}>{l.dur}</span>}
+                        <div className="lesson-cover-hover" style={{height:135,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:GRADS[i%GRADS.length],display:"flex",alignItems:"center",justifyContent:"center"}}>
+                          <span style={{position:"absolute",top:8,left:8,background:SG,color:"#fff",fontSize:10,fontWeight:700,padding:"4px 10px",borderRadius:7,zIndex:2}}>{level}</span>
+                          {l.dur&&<span style={{position:"absolute",bottom:8,right:8,background:"rgba(0,0,0,0.5)",color:"#fff",fontSize:10,padding:"3px 8px",borderRadius:6,zIndex:2}}>{l.dur}</span>}
                           {!soon&&(
                             <div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}>
-                              <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)"}}>
-                                <span style={{fontSize:12,color:SG,marginLeft:2}}>▶</span>
+                              <div style={{width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,0.12)"}}>
+                                <span style={{fontSize:17,color:SG,marginLeft:3}}>▶</span>
                               </div>
                             </div>
                           )}
-                          {done[id]&&<span style={{position:"absolute",top:6,right:6,background:"#16a34a",color:"#fff",fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:5,zIndex:2}}>✓</span>}
+                          {done[id]&&<span style={{position:"absolute",top:8,right:8,background:"#16a34a",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:6,zIndex:2}}>✓</span>}
                         </div>
-                        <div style={{padding:"8px 10px 10px"}}>
-                          <div style={{fontSize:12,fontWeight:700,color:T.t1,marginBottom:2,lineHeight:1.3}}>{l.title}</div>
-                          <div style={{fontSize:10.5,color:T.t3,marginBottom:6,fontWeight:500}}>{l.about}</div>
+                        <div style={{padding:"14px 16px 16px"}}>
+                          <div style={{fontSize:15,fontWeight:700,color:T.t1,marginBottom:4,lineHeight:1.35}}>{l.title}</div>
+                          {l.about&&<div style={{fontSize:12,color:T.t3,marginBottom:8,fontWeight:500,lineHeight:1.4}}>{l.about}</div>}
                           <div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"wrap"}}>
                             {(l.skills||[]).map((sk,j)=>(
-                              <span key={j} style={{fontSize:9,fontWeight:700,padding:"2px 7px",borderRadius:5,background:(SCOL[sk]||"#666")+"15",color:SCOL[sk]||"#666"}}>{sk}</span>
+                              <span key={j} style={{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:6,background:(SCOL[sk]||"#666")+"15",color:SCOL[sk]||"#666"}}>{sk}</span>
                             ))}
-                            {l.date&&<span style={{fontSize:9,color:T.t3,marginLeft:"auto",fontWeight:600}}>{l.date}</span>}
+                            {l.date&&<span style={{fontSize:10.5,color:T.t3,marginLeft:"auto",fontWeight:600}}>📅 {l.date}</span>}
                           </div>
                           {!soon&&(
                             <button onClick={e=>{e.stopPropagation();setDone(p=>({...p,[id]:!p[id]}));}} style={{
-                              marginTop:6,width:"100%",padding:"6px",borderRadius:7,
+                              marginTop:10,width:"100%",padding:"9px",borderRadius:9,
                               border:`1.5px solid ${done[id]?"#16a34a40":isL?CF:T.line}`,
                               background:done[id]?"#16a34a12":"transparent",
                               color:done[id]?"#16a34a":T.t3,
-                              fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:Fb,
+                              fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:Fb,
                             }}>{done[id]?"✓ Concluída":"Marcar como assistida"}</button>
                           )}
                         </div>
@@ -1029,17 +1029,18 @@ export default function App() {
                           return (
                             <div key={li} style={{marginBottom:18}}>
                               <div style={{fontSize:11,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1,marginBottom:8,paddingLeft:4}}>{lvBadge} {lv}</div>
-                              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:10}}>
+                              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:16}}>
                                 {lvLessons.map((l,i)=>(
-                                  <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{borderRadius:12,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",background:T.card,border:`1.5px solid ${conf.color}30`,boxShadow:T.sh,opacity:l.youtubeLink?1:0.5}}>
-                                    <div className="lesson-cover-hover" style={{height:65,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:`linear-gradient(135deg,${conf.color}40,${conf.color}15)`}}>
-                                      <span style={{position:"absolute",top:5,left:5,background:conf.color,color:"#fff",fontSize:8.5,fontWeight:700,padding:"2px 7px",borderRadius:5,zIndex:2}}>{conf.icon} {lv}</span>
-                                      {l.youtubeLink&&<div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}><div style={{width:28,height:28,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontSize:11,color:conf.color,marginLeft:2}}>▶</span></div></div>}
+                                  <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{borderRadius:16,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",background:T.card,border:`1.5px solid ${conf.color}30`,boxShadow:T.sh,opacity:l.youtubeLink?1:0.5}}>
+                                    <div className="lesson-cover-hover" style={{height:130,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:`linear-gradient(135deg,${conf.color}55,${conf.color}20)`,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                                      {!l.cover&&<span style={{fontSize:40,opacity:0.6}}>{conf.icon}</span>}
+                                      <span style={{position:"absolute",top:8,left:8,background:conf.color,color:"#fff",fontSize:10,fontWeight:700,padding:"4px 10px",borderRadius:7,zIndex:2}}>{conf.icon} {lv}</span>
+                                      {l.youtubeLink&&<div className="lesson-play-overlay" style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(61,15,28,0.28)",opacity:0,transition:"opacity 0.2s"}}><div style={{width:44,height:44,borderRadius:"50%",background:"rgba(255,255,255,0.92)",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontSize:17,color:conf.color,marginLeft:3}}>▶</span></div></div>}
                                     </div>
-                                    <div style={{padding:"7px 10px 9px"}}>
-                                      <div style={{fontSize:11.5,fontWeight:700,color:T.t1,lineHeight:1.3}}>{l.title}</div>
-                                      {l.description&&<div style={{fontSize:10,color:T.t3,fontWeight:500,marginTop:2}}>{l.description}</div>}
-                                      {l.date&&<div style={{fontSize:9,color:T.t3,marginTop:3,fontWeight:600}}>📅 {l.date}</div>}
+                                    <div style={{padding:"14px 16px 16px"}}>
+                                      <div style={{fontSize:15,fontWeight:700,color:T.t1,lineHeight:1.35,marginBottom:4}}>{l.title}</div>
+                                      {l.description&&<div style={{fontSize:12,color:T.t3,fontWeight:500,marginBottom:6,lineHeight:1.4}}>{l.description}</div>}
+                                      {l.date&&<div style={{fontSize:10.5,color:T.t3,fontWeight:600}}>📅 {l.date}</div>}
                                     </div>
                                   </div>
                                 ))}
@@ -1122,22 +1123,31 @@ export default function App() {
 
             {/* MATERIAIS */}
             {tab==="pdfs"&&(
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:10}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:16}}>
                 {sbMaterials.length===0
                   ?<p style={{gridColumn:"1/-1",textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhum material ainda. ♡</p>
                   :sbMaterials.map((m,i)=>{
                     const kind = (m.kind||"link").toLowerCase();
                     const iconMap = {pdf:"📄",image:"🖼️",audio:"🎧",video:"🎬",youtube:"▶️",link:"🔗"};
+                    const kindLabel = {pdf:"PDF",image:"Imagem",audio:"Áudio",video:"Vídeo",youtube:"YouTube",link:"Link"};
                     const icon = iconMap[kind]||"🔗";
                     return (
                       <a key={i} href={m.url} target="_blank" rel="noopener noreferrer" className="hov" style={{
-                        padding:"20px 16px",borderRadius:14,textDecoration:"none",
+                        borderRadius:18,textDecoration:"none",overflow:"hidden",
                         background:T.card,border:`1.5px solid ${isL?CF+"30":T.line}`,
                         boxShadow:T.sh,display:"block",
                       }}>
-                        <div style={{width:38,height:38,borderRadius:10,background:`linear-gradient(135deg,${SG}15,${CF}15)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,marginBottom:10}}>{icon}</div>
-                        <div style={{fontSize:12,fontWeight:600,color:T.t1,marginBottom:4}}>{m.title}</div>
-                        <div style={{fontSize:10,color:T.t3,fontWeight:500}}>Abrir ↗</div>
+                        <div style={{
+                          height:100,background:`linear-gradient(135deg,${SG}22,${CF}22)`,
+                          display:"flex",alignItems:"center",justifyContent:"center",position:"relative",
+                        }}>
+                          <span style={{fontSize:44}}>{icon}</span>
+                          <span style={{position:"absolute",top:10,right:12,background:"rgba(255,255,255,0.85)",color:SG,fontSize:10,fontWeight:800,padding:"3px 10px",borderRadius:20,letterSpacing:0.5}}>{kindLabel[kind]||"Link"}</span>
+                        </div>
+                        <div style={{padding:"16px 18px"}}>
+                          <div style={{fontSize:15,fontWeight:700,color:T.t1,marginBottom:6,lineHeight:1.35}}>{m.title}</div>
+                          <div style={{fontSize:11.5,color:CF,fontWeight:700}}>Abrir material →</div>
+                        </div>
                       </a>
                     );
                   })
