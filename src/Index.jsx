@@ -528,7 +528,6 @@ export default function App() {
   const [sbHomework, setSbHomework] = useState([]);
   const [sbLessons, setSbLessons] = useState([]);
   const [extraLessons, setExtraLessons] = useState([]);
-  const [showExtra, setShowExtra] = useState(false);
   const [sbMaterials, setSbMaterials] = useState([]);
   const [dailyMsg] = useState(()=>MESSAGES[Math.floor(Math.random()*MESSAGES.length)]);
   const [appTip] = useState(()=>APP_TIPS[Math.floor(Math.random()*APP_TIPS.length)]);
@@ -767,7 +766,6 @@ export default function App() {
         <main style={{flex:1,padding:"28px 36px",maxWidth:860,margin:"0 auto"}}>
 
           {/* WELCOME BANNER with heart pattern */}
-          {/* ═══ DASHBOARD TAB ═══ */}
           {tab==="dashboard"&&(<>
           <div style={{
             padding:"24px 28px",borderRadius:16,marginBottom:24,position:"relative",overflow:"hidden",
@@ -840,7 +838,7 @@ export default function App() {
             const actions = [];
             if(pendingHw>0) actions.push({icon:"✏️",label:`${pendingHw} tarefa${pendingHw>1?'s':''} pendente${pendingHw>1?'s':''}`,sub:"Confira e marque como feita!",color:SG,tab:"tasks"});
             if(newMaterials>0) actions.push({icon:"📄",label:`${newMaterials} material${newMaterials>1?'is':''} disponíve${newMaterials>1?'is':'l'}`,sub:"A Teacher enviou conteúdo pra você!",color:"#2563eb",tab:"pdfs"});
-            if(myLessonsCount>0) actions.push({icon:"📚",label:`${myLessonsCount} aula${myLessonsCount>1?'s':''} no nível ${level}`,sub:"Continue de onde parou!",color:"#16a34a",tab:"lessons"});
+            if(myLessonsCount>0) actions.push({icon:"📚",label:`${myLessonsCount} aula${myLessonsCount>1?'s':''} no nível ${level}`,sub:"Continue de onde parou!",color:"#16a34a",tab:"extras"});
             if(extraLessons.length>0) actions.push({icon:"🎁",label:`${extraLessons.length} aula${extraLessons.length>1?'s':''} extra${extraLessons.length>1?'s':''}`,sub:"Música, curiosidades e mais!",color:CF,tab:"extras"});
             return actions.length>0 ? (
               <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(actions.length,3)},1fr)`,gap:10,marginBottom:18}}>
@@ -881,20 +879,19 @@ export default function App() {
             </div>
             {appTip.tab&&<span style={{marginLeft:"auto",fontSize:11,color:CF,fontWeight:600}}>Ver →</span>}
           </div>
-
-          {/* LEVEL BAR */}
-          {tab==="lessons"&&<div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
-            <span style={{fontSize:12,fontWeight:700,color:"#fff",background:SG,padding:"4px 14px",borderRadius:8}}>{level}</span>
-            <span style={{fontSize:13,fontWeight:600,color:T.t2}}>{LLABEL[level]}</span>
-            <Heart size={12} color={SG} opacity={0.3}/>
-            <div style={{flex:1,height:1.5,background:isL?CF+"40":T.line,borderRadius:1}} />
-}
-          </div>
-
           </>)}
 
+          {/* LEVEL BAR - only on lessons tab */}
+          {tab==="lessons"&&(
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+              <span style={{fontSize:12,fontWeight:700,color:"#fff",background:SG,padding:"4px 14px",borderRadius:8}}>{level}</span>
+              <span style={{fontSize:13,fontWeight:600,color:T.t2}}>{LLABEL[level]}</span>
+              <Heart size={12} color={SG} opacity={0.3}/>
+              <div style={{flex:1,height:1.5,background:isL?CF+"40":T.line,borderRadius:1}} />
+            </div>
+          )}
 
-          {!unlocked?(
+          {tab==="lessons"&&(!unlocked?(
             <div style={{textAlign:"center",padding:"60px 20px",background:T.card,borderRadius:16,border:`1.5px solid ${isL?CF+"40":T.line}`}}>
               <div style={{fontSize:36,marginBottom:12,opacity:0.5}}>🔒</div>
               <p style={{fontFamily:Fd,fontSize:18,color:T.t1,margin:"0 0 4px",fontWeight:700}}>Nível {level} em breve</p>
@@ -961,6 +958,7 @@ export default function App() {
                   })}
                 </div>              </div>
             )}
+          </>))}
 
             {/* EXTRAS TAB */}
             {tab==="extras"&&(()=>{
@@ -1260,7 +1258,6 @@ export default function App() {
                 </div>
               </div>
             )}
-          </>)}
         </main>
       </div>
     </div>
