@@ -765,6 +765,20 @@ export default function App() {
         {/* MAIN */}
         <main style={{flex:1,padding:"28px 36px",maxWidth:860,margin:"0 auto"}}>
 
+          {/* GLOBAL VIDEO PLAYER - shows on any tab */}
+          {video&&(
+            <div style={{position:"relative",marginBottom:20,borderRadius:14,overflow:"hidden",aspectRatio:"16/9",background:"#000",border:`2px solid ${isL?CF:T.line}`}}>
+              <button onClick={()=>setVideo(null)} style={{
+                position:"absolute",top:8,right:8,zIndex:5,width:30,height:30,borderRadius:"50%",
+                background:"rgba(0,0,0,0.6)",border:"none",color:"#fff",fontSize:14,cursor:"pointer",
+                display:"flex",alignItems:"center",justifyContent:"center",fontFamily:Fb,
+              }}>✕</button>
+              <iframe src={`https://www.youtube.com/embed/${ytId(video)}?autoplay=1&rel=0`}
+                style={{width:"100%",height:"100%",border:"none"}}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+            </div>
+          )}
+
           {/* WELCOME BANNER with heart pattern */}
           {tab==="dashboard"&&(<>
           <div style={{
@@ -902,16 +916,8 @@ export default function App() {
             {/* AULAS */}
             {tab==="lessons"&&(
               <div>
-                {video&&(
-                  <div style={{marginBottom:20,borderRadius:14,overflow:"hidden",aspectRatio:"16/9",background:"#000",border:`2px solid ${isL?CF:T.line}`}}>
-                    <iframe src={`https://www.youtube.com/embed/${ytId(video)}?autoplay=1&rel=0`}
-                      style={{width:"100%",height:"100%",border:"none"}}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-                  </div>
-                )}
-
                 <div style={{fontSize:12,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1.2,marginBottom:10}}>📚 Suas aulas</div>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:16,marginBottom:22}}>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:22}}>
                   {[...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].length===0
                     ? <div style={{gridColumn:"1/-1",textAlign:"center",padding:"24px 12px",color:T.t3,fontSize:12,fontWeight:500}}>Nenhuma aula atribuída ainda neste nível. ♡</div>
                     : [...sbLessons.filter(l=>l.level===level).map(l=>({title:l.title,url:l.youtubeLink,date:l.date,about:l.description||"",skills:[],dur:l.duration?`${l.duration} min`:"",cover:l.cover})), ...(s.lessons[level]||[])].map((l,i)=>{
@@ -963,10 +969,14 @@ export default function App() {
             {/* EXTRAS TAB */}
             {tab==="extras"&&(()=>{
               const catConfig = {
-                "Música":{icon:"🎵",color:"#8090A8",dark:"#192B51",sub:"Aprenda inglês cantando suas músicas favoritas"},
-                "Literatura":{icon:"📖",color:"#72251F",dark:"#3D0F1C",sub:"Explore histórias incríveis em inglês"},
-                "Filmes & Séries":{icon:"🎬",color:"#192B51",dark:"#0D1A33",sub:"Aprenda com cenas de filmes e séries"},
-                "Taylor Swift":{icon:"✨",color:"#771C31",dark:"#3D0F1C",sub:"Minicurso especial — cante e aprenda com a Taylor"},
+                "Música":{icon:"🎵",color:"#8090A8",dark:"#192B51",sub:"Aprenda inglês cantando suas músicas favoritas",
+                  why:"Música fixa vocabulário e pronúncia de um jeito natural — seu cérebro grava ritmo e som junto com o significado. Cantar em inglês melhora fluência, entonação e retenção de expressões idiomáticas."},
+                "Literatura":{icon:"📖",color:"#72251F",dark:"#3D0F1C",sub:"Explore histórias incríveis em inglês",
+                  why:"Ler literatura em inglês amplia vocabulário, ensina estruturas gramaticais em contexto real e desenvolve interpretação de texto — uma das habilidades mais valorizadas em provas e no dia a dia."},
+                "Filmes & Séries":{icon:"🎬",color:"#192B51",dark:"#0D1A33",sub:"Aprenda com cenas de filmes e séries",
+                  why:"Filmes e séries treinam o ouvido pra sotaques reais, gírias e expressões do dia a dia que não aparecem em livros didáticos. É a ponte entre a sala de aula e o inglês que se fala de verdade."},
+                "Taylor Swift":{icon:"✨",color:"#771C31",dark:"#3D0F1C",sub:"Minicurso especial — cante e aprenda com a Taylor",
+                  why:"Um mergulho temático nas letras da Taylor Swift: tradução, análise e prática de pronúncia. Ideal pra quem já ama as músicas e quer aprender inglês através do que já conhece e curte."},
               };
               const allCats = ["Música","Literatura","Filmes & Séries","Taylor Swift"];
               const levelOrder = ["Básico","Intermediário","Avançado"];
@@ -995,7 +1005,7 @@ export default function App() {
                           onMouseOver={e=>{if(count>0){e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 10px 32px ${conf.color}60`}}}
                           onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow=`0 6px 24px ${conf.color}40`}}>
                             <div style={{position:"relative",zIndex:2}}>
-                              <div style={{fontSize:36,marginBottom:8,filter:"drop-shadow(0 2px 4px rgba(0,0,0,0.3))"}}>{conf.icon}</div>
+                              <div style={{fontSize:52,marginBottom:8,filter:"drop-shadow(0 2px 4px rgba(0,0,0,0.3))"}}>{conf.icon}</div>
                               <div style={{fontSize:16,fontWeight:800,color:"#fff",letterSpacing:0.5,lineHeight:1.2,textShadow:"0 2px 8px rgba(0,0,0,0.3)"}}>{cat}</div>
                               <div style={{fontSize:10.5,color:"rgba(255,255,255,0.75)",marginTop:4,fontWeight:500,lineHeight:1.4}}>{conf.sub}</div>
                               {count>0&&<div style={{marginTop:8,display:"inline-block",background:"rgba(255,255,255,0.2)",borderRadius:20,padding:"3px 10px",fontSize:10,fontWeight:700,color:"#fff"}}>{count} aula{count>1?"s":""}</div>}
@@ -1023,13 +1033,27 @@ export default function App() {
                             <button onClick={()=>setExtraCat(null)} style={{background:"rgba(255,255,255,0.2)",border:"none",borderRadius:8,padding:"6px 12px",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:Fb}}>← Voltar</button>
                           </div>
                         </div>
+
+                        {/* WHY THIS CATEGORY - pedagogical explanation */}
+                        {conf.why&&(
+                          <div style={{
+                            display:"flex",gap:12,alignItems:"flex-start",padding:"14px 18px",borderRadius:14,marginBottom:18,
+                            background:isL?`${conf.color}0d`:T.card,border:`1.5px solid ${conf.color}30`,
+                          }}>
+                            <span style={{fontSize:20,flexShrink:0}}>💡</span>
+                            <div>
+                              <div style={{fontSize:11,fontWeight:700,color:conf.color,textTransform:"uppercase",letterSpacing:0.8,marginBottom:4}}>Por que {extraCat.toLowerCase()}?</div>
+                              <div style={{fontSize:12.5,color:T.t2,lineHeight:1.6,fontWeight:500}}>{conf.why}</div>
+                            </div>
+                          </div>
+                        )}
                         {levels.map((lv,li)=>{
                           const lvLessons = catLessons.filter(l=>(l.extraLevel||"Básico")===lv);
                           const lvBadge = lv==="Básico"?"🌱":lv==="Intermediário"?"🌿":"🌳";
                           return (
                             <div key={li} style={{marginBottom:18}}>
                               <div style={{fontSize:11,fontWeight:700,color:T.t3,textTransform:"uppercase",letterSpacing:1,marginBottom:8,paddingLeft:4}}>{lvBadge} {lv}</div>
-                              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:16}}>
+                              <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
                                 {lvLessons.map((l,i)=>(
                                   <div key={i} className="hov lesson-card-hover" onClick={()=>l.youtubeLink&&setVideo(l.youtubeLink)} style={{borderRadius:16,overflow:"hidden",cursor:l.youtubeLink?"pointer":"default",background:T.card,border:`1.5px solid ${conf.color}30`,boxShadow:T.sh,opacity:l.youtubeLink?1:0.5}}>
                                     <div className="lesson-cover-hover" style={{height:130,position:"relative",background:l.cover?`url(${l.cover}) center/cover`:`linear-gradient(135deg,${conf.color}55,${conf.color}20)`,display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -1123,7 +1147,7 @@ export default function App() {
 
             {/* MATERIAIS */}
             {tab==="pdfs"&&(
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:16}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
                 {sbMaterials.length===0
                   ?<p style={{gridColumn:"1/-1",textAlign:"center",padding:40,color:T.t3,fontWeight:500}}>Nenhum material ainda. ♡</p>
                   :sbMaterials.map((m,i)=>{
