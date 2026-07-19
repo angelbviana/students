@@ -519,7 +519,7 @@ export default function App() {
   const [code, setCode] = useState("");
   const [err, setErr] = useState("");
   const [level, setLevel] = useState("A1");
-  const [tab, setTab] = useState("lessons");
+  const [tab, setTab] = useState("dashboard");
   const [video, setVideo] = useState(null);
   const [search, setSearch] = useState("");
   const [done, setDone] = useState({});
@@ -664,6 +664,7 @@ export default function App() {
   const pending = Object.values(s.tasks).flat().filter(t=>!t.done).length;
   const words = (s.wordBank[level]||[]).filter(w=>!search||w.en.toLowerCase().includes(search.toLowerCase())||w.pt.toLowerCase().includes(search.toLowerCase()));
   const tabs = [
+    {id:"dashboard",label:"Início",badge:null,icon:"🏠"},
     {id:"lessons",label:"Aulas",badge:null,icon:"📚"},
     {id:"extras",label:"Aulas Extras",badge:extraLessons.length||null,icon:"🎁"},
     {id:"tasks",label:"Tarefas",badge:pending||null,icon:"✏️"},
@@ -766,6 +767,8 @@ export default function App() {
         <main style={{flex:1,padding:"28px 36px",maxWidth:860,margin:"0 auto"}}>
 
           {/* WELCOME BANNER with heart pattern */}
+          {/* ═══ DASHBOARD TAB ═══ */}
+          {tab==="dashboard"&&(<>
           <div style={{
             padding:"24px 28px",borderRadius:16,marginBottom:24,position:"relative",overflow:"hidden",
             background:`linear-gradient(135deg, ${SG}, #7A1D2E 60%, ${CF})`,
@@ -838,7 +841,7 @@ export default function App() {
             if(pendingHw>0) actions.push({icon:"✏️",label:`${pendingHw} tarefa${pendingHw>1?'s':''} pendente${pendingHw>1?'s':''}`,sub:"Confira e marque como feita!",color:SG,tab:"tasks"});
             if(newMaterials>0) actions.push({icon:"📄",label:`${newMaterials} material${newMaterials>1?'is':''} disponíve${newMaterials>1?'is':'l'}`,sub:"A Teacher enviou conteúdo pra você!",color:"#2563eb",tab:"pdfs"});
             if(myLessonsCount>0) actions.push({icon:"📚",label:`${myLessonsCount} aula${myLessonsCount>1?'s':''} no nível ${level}`,sub:"Continue de onde parou!",color:"#16a34a",tab:"lessons"});
-            if(extraLessons.length>0) actions.push({icon:"🎁",label:`${extraLessons.length} aula${extraLessons.length>1?'s':''} extra${extraLessons.length>1?'s':''}`,sub:"Música, curiosidades e mais!",color:CF,tab:"lessons"});
+            if(extraLessons.length>0) actions.push({icon:"🎁",label:`${extraLessons.length} aula${extraLessons.length>1?'s':''} extra${extraLessons.length>1?'s':''}`,sub:"Música, curiosidades e mais!",color:CF,tab:"extras"});
             return actions.length>0 ? (
               <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(actions.length,3)},1fr)`,gap:10,marginBottom:18}}>
                 {actions.slice(0,3).map((a,i)=>(
@@ -880,12 +883,16 @@ export default function App() {
           </div>
 
           {/* LEVEL BAR */}
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
+          {tab==="lessons"&&<div style={{display:"flex",alignItems:"center",gap:10,marginBottom:24}}>
             <span style={{fontSize:12,fontWeight:700,color:"#fff",background:SG,padding:"4px 14px",borderRadius:8}}>{level}</span>
             <span style={{fontSize:13,fontWeight:600,color:T.t2}}>{LLABEL[level]}</span>
             <Heart size={12} color={SG} opacity={0.3}/>
             <div style={{flex:1,height:1.5,background:isL?CF+"40":T.line,borderRadius:1}} />
+}
           </div>
+
+          </>)}
+
 
           {!unlocked?(
             <div style={{textAlign:"center",padding:"60px 20px",background:T.card,borderRadius:16,border:`1.5px solid ${isL?CF+"40":T.line}`}}>
